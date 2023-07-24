@@ -1,3 +1,10 @@
+/*
+ * @Author: wanglu
+ * @Date: 2023-07-24 18:58:26
+ * @LastEditors: wanglu
+ * @LastEditTime: 2023-07-24 19:28:01
+ * @Description: 
+ */
 import { createApp } from 'vue'
 
 import Cookies from 'js-cookie'
@@ -22,6 +29,9 @@ import SvgIcon from '@/components/SvgIcon'
 import elementIcons from '@/components/SvgIcon/svgicon'
 
 import './permission' // permission control
+
+// 导入Unocss
+import 'virtual:uno.css'
 
 import { useDict } from '@/utils/dict'
 import { parseTime, resetForm, addDateRange, handleTree, selectDictLabel, selectDictLabels } from '@/utils/ruoyi'
