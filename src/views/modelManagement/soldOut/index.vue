@@ -1,43 +1,10 @@
 <!--
  * @Author: wanglu
- * @Date: 2023-07-20 14:52:21
+ * @Date: 2023-07-24 09:34:51
  * @LastEditors: wanglu
- * @LastEditTime: 2023-07-20 18:06:49
+ * @LastEditTime: 2023-07-24 09:36:46
  * @Description: 
 -->
 <template>
-  <div class="">
-模型下架    
-  </div>
+  <div> 表单构建 <svg-icon icon-class="build" /> </div>
 </template>
-
-<script>
-export default {
-  name: 'Index',
-
-  data() {
-    return {
-      
-    }
-  },
-  methods: {
-
-  }
-}
-</script>
-
-<style lang="scss" scoped>
-.dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
-  position: relative;
-
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
-  }
-}
-
-
-</style>
