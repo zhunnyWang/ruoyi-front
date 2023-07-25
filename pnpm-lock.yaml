@@ -13,6 +13,7 @@ specifiers:
   fuse.js: 6.6.2
   js-cookie: 3.0.1
   jsencrypt: 3.3.1
+  lodash: ^4.17.21
   nprogress: 0.2.0
   pinia: 2.0.22
   sass: 1.56.1
@@ -37,6 +38,7 @@ dependencies:
   fuse.js: 6.6.2
   js-cookie: 3.0.1
   jsencrypt: 3.3.1
+  lodash: 4.17.21
   nprogress: 0.2.0
   pinia: 2.0.22_vue@3.2.45
   unocss: 0.53.6_vite@3.2.3
