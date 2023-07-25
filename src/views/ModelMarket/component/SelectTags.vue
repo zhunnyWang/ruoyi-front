@@ -5,26 +5,28 @@
     </section>
     <section class="content">
       <!-- 默认选项 -->
-      <div v-if="defaultOption.label" class="zlc-tag-wrap">
-        <span
-          class="zlc-tag flex-row"
+      <el-row v-if="defaultOption.label" class="zlc-tag-wrap">
+        <el-col
+        :sm="6" :md="4" :lg="2" 
+          class="zlc-tag flex-row mt-2"
           :class="{'zlc-tag__checked': defaultOption.checked}"
           @click.stop="handleSelectDefault"
         >
-          <span class="text-ellipsis">{{ defaultOption.label }}</span>
-        </span>
-      </div>
+          <span class="flex justify-center">{{ defaultOption.label }}</span>
+        </el-col>
+      </el-row>
       <!-- 实际选项 -->
-      <div v-for="(tag, index) in tagList" :key="index" class="zlc-tag-wrap">
-        <span
-          class="zlc-tag flex-row"
+      <el-row v-for="(tag, index) in tagList" :key="index" :gutter="10" class="zlc-tag-wrap">
+        <el-col
+          class="zlc-tag flex-row mt-2"
           :class="{'zlc-tag__checked': tag.checked}"
           :title="tag.label"
+          :sm="6" :md="4" :lg="2"  
           @click.stop="handleSelect(tag)"
         >
-          <span class="text-ellipsis">{{ tag.label }}</span>
-        </span>
-      </div>
+          <span class="flex justify-center ">{{ tag.label }}</span>
+        </el-col>
+      </el-row>
     </section>
   </div>
 </template>
@@ -187,8 +189,7 @@ export default {
     width: 140px;
     display: inline-block;
     .zlc-tag {
-      max-width: 220px;
-      margin: 10px;
+      min-width: 120px;
       padding: 5px 10px;
       // border-radius: 10px;
       background-color:#f1f2f3;
