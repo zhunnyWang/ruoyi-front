@@ -1,3 +1,6 @@
 <template>
-   <div> 表单构建 <svg-icon icon-class="build" /> </div>
+   <auto-form-view></auto-form-view>
 </template>
+
+<script setup>
+</script>

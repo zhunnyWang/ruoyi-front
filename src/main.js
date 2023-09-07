@@ -1,8 +1,8 @@
 /*
  * @Author: wanglu
  * @Date: 2023-07-24 18:58:26
- * @LastEditors: wanglu
- * @LastEditTime: 2023-07-24 19:28:01
+ * @LastEditors: Xueying Wang
+ * @LastEditTime: 2023-09-07 16:59:22
  * @Description: 
  */
 import { createApp } from 'vue'
@@ -53,7 +53,10 @@ import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 
+import ComponentAutoRegister from "@/utils/componentAutoRegister"
+
 const app = createApp(App)
+new ComponentAutoRegister(app, import.meta.glob('@/components/AutoForm/**/*.vue'))
 
 // 全局方法挂载
 app.config.globalProperties.useDict = useDict
