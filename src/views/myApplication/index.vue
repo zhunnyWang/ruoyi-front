@@ -2,231 +2,102 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-08 14:48:12
+ * @LastEditTime: 2023-09-08 17:01:25
  * @Description: 
 -->
 <template>
-  <div class="app-container">
-     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
-        <el-form-item label="审批状态" prop="status">
-           <el-select v-model="queryParams.status" placeholder="" clearable style="width: 200px">
-              <el-option
-                 v-for="dict in approve_status"
-                 :key="dict.value"
-                 :label="dict.label"
-                 :value="dict.value"
-              />
-           </el-select>
-        </el-form-item>
-        <el-form-item label="审批事项" prop="status">
-           <el-select v-model="queryParams.status" placeholder="" clearable style="width: 200px">
-              <el-option
-                 v-for="dict in approve_items"
-                 :key="dict.value"
-                 :label="dict.label"
-                 :value="dict.value"
-              />
-           </el-select>
-        </el-form-item>
-        <el-form-item>
-           <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-           <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-     </el-form>
+   <div class="app-container">
+      <el-form :model="form" ref="queryRef" :inline="true">
+         <el-form-item label="审批状态" prop="status">
+            <el-select v-model="form.status" placeholder="" clearable style="width: 200px">
+               <el-option v-for="dict in approve_status" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+         </el-form-item>
+         <el-form-item label="审批事项" prop="status">
+            <el-select v-model="form.status" placeholder="" clearable style="width: 200px">
+               <el-option v-for="dict in approve_items" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+         </el-form-item>
+         <el-form-item>
+            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+         </el-form-item>
+      </el-form>
 
-     <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="序号" align="center" prop="postId" />
-        <el-table-column label="申请事项" align="center" prop="postCode" />
-        <el-table-column label="申请单位" align="center" prop="postName" />
-        <el-table-column label="申请人" align="center" prop="postSort" />
-        <el-table-column label="提交时间" align="center" prop="postName" />
-        <el-table-column label="说明" align="center" prop="postSort" />
-        <el-table-column label="审批状态" align="center" prop="status">
-           <template #default="scope">
-              <dict-tag :options="approve_status" :value="scope.row.status" />
-           </template>
-        </el-table-column>
-        <el-table-column label="操作" width="180" align="center" class-name="small-padding fixed-width">
-           <template #default="scope">
-              <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:post:edit']">查看</el-button>
-           </template>
-        </el-table-column>
-     </el-table>
+      <el-table v-loading="loading" :data="dataSource">
+         <el-table-column type="index" width="50" />
+         <el-table-column label="申请事项" align="center" prop="postCode" />
+         <el-table-column label="申请单位" align="center" prop="postName" />
+         <el-table-column label="申请人" align="center" prop="postSort" />
+         <el-table-column label="提交时间" align="center" prop="postName" />
+         <el-table-column label="说明" align="center" prop="postSort" />
+         <el-table-column label="审批状态" align="center" prop="status">
+            <template #default="scope">
+               <dict-tag :options="approve_status" :value="scope.row.status" />
+            </template>
+         </el-table-column>
+         <el-table-column label="操作" width="180" align="center" class-name="small-padding fixed-width">
+            <template #default="scope">
+               <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
+                  v-hasPermi="['system:post:edit']">查看</el-button>
+            </template>
+         </el-table-column>
+      </el-table>
 
-     <pagination
-        v-show="total > 0"
-        :total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
-        @pagination="getList"
-     />
-
-     <!-- 添加或修改岗位对话框 -->
-     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-        <el-form ref="postRef" :model="form" :rules="rules" label-width="80px">
-           <el-form-item label="岗位名称" prop="postName">
-              <el-input v-model="form.postName" placeholder="请输入岗位名称" />
-           </el-form-item>
-           <el-form-item label="岗位编码" prop="postCode">
-              <el-input v-model="form.postCode" placeholder="请输入编码名称" />
-           </el-form-item>
-           <el-form-item label="岗位顺序" prop="postSort">
-              <el-input-number v-model="form.postSort" controls-position="right" :min="0" />
-           </el-form-item>
-           <el-form-item label="岗位状态" prop="status">
-              <el-radio-group v-model="form.status">
-                 <el-radio
-                    v-for="dict in approve_items"
-                    :key="dict.value"
-                    :label="dict.value"
-                 >{{ dict.label }}</el-radio>
-              </el-radio-group>
-           </el-form-item>
-           <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-           </el-form-item>
-        </el-form>
-        <template #footer>
-           <div class="dialog-footer">
-              <!-- <el-button type="primary" @click="submitForm">确 定</el-button> -->
-              <el-button @click="cancel">取 消</el-button>
-           </div>
-        </template>
-     </el-dialog>
-  </div>
+      <pagination v-show="paginationParams.total > 0" :total="paginationParams.total"
+         v-model:page="paginationParams.current" v-model:limit="paginationParams.pageSize"
+         @pagination="paginationChange" />
+   </div>
 </template>
 
 <script setup name="Post">
-import { listAudit, getAudit, delAudit, addAudit, updateAudit } from "@/api/system/post";
+import { listPost, addPost, delPost, getPost, updatePost } from "@/api/system/post"
+import useTable from '@/composables/useTable'
 
 const { proxy } = getCurrentInstance();
 const { approve_status } = proxy.useDict("approve_status");
 const { approve_items } = proxy.useDict("approve_items");
 
-const postList = ref([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const title = ref("");
+// table相关
+const { loading, dataSource, pagination: paginationParams, handleChange } = useTable((params) => {
+   return listPost(params)
+})
 
-const data = reactive({
- form: {},
- queryParams: {
-   pageNum: 1,
-   pageSize: 10,
-   postCode: undefined,
-   postName: undefined,
-   status: undefined
- },
- rules: {
-   postName: [{ required: true, message: "岗位名称不能为空", trigger: "blur" }],
-   postCode: [{ required: true, message: "岗位编码不能为空", trigger: "blur" }],
-   postSort: [{ required: true, message: "岗位顺序不能为空", trigger: "blur" }],
- }
-});
+const query = reactive({
+   status: '3',
+})
 
-const { queryParams, form, rules } = toRefs(data);
+const refresh = () => {
+   paginationParams.current = 1
+   query.status = '3'
+}
 
-/** 查询岗位列表 */
-function getList() {
- loading.value = true;
- listPost(queryParams.value).then(response => {
-   postList.value = response.rows;
-   total.value = response.total;
-   loading.value = false;
- });
+const paginationChange = (val) => {
+   handleChange({ ...paginationParams, current: val.page, pageSize: val.limit }, query)
 }
-/** 取消按钮 */
-function cancel() {
- open.value = false;
- reset();
-}
-/** 表单重置 */
-function reset() {
- form.value = {
-   postId: undefined,
-   postCode: undefined,
-   postName: undefined,
-   postSort: 0,
-   status: "0",
-   remark: undefined
- };
- proxy.resetForm("postRef");
-}
+
+watch(query, (val) => {
+   handleChange(paginationParams, {
+      ...val,
+   })
+})
+
+onMounted(() => {
+   handleChange(paginationParams, query)
+})
+
+// 搜索相关
+const form = reactive({
+   status: '3',
+})
 /** 搜索按钮操作 */
 function handleQuery() {
- queryParams.value.pageNum = 1;
- getList();
-}
-/** 重置按钮操作 */
-function resetQuery() {
- proxy.resetForm("queryRef");
- handleQuery();
-}
-/** 多选框选中数据 */
-function handleSelectionChange(selection) {
- ids.value = selection.map(item => item.postId);
- single.value = selection.length != 1;
- multiple.value = !selection.length;
-}
-/** 新增按钮操作 */
-function handleAdd() {
- reset();
- open.value = true;
- title.value = "添加岗位";
-}
-/** 修改按钮操作 */
-function handleUpdate(row) {
- reset();
- const postId = row.postId || ids.value;
- getPost(postId).then(response => {
-   form.value = response.data;
-   open.value = true;
-   title.value = "修改岗位";
- });
-}
-/** 提交按钮 */
-function submitForm() {
- proxy.$refs["postRef"].validate(valid => {
-   if (valid) {
-     if (form.value.postId != undefined) {
-       updatePost(form.value).then(response => {
-         proxy.$modal.msgSuccess("修改成功");
-         open.value = false;
-         getList();
-       });
-     } else {
-       addPost(form.value).then(response => {
-         proxy.$modal.msgSuccess("新增成功");
-         open.value = false;
-         getList();
-       });
-     }
-   }
- });
-}
-/** 删除按钮操作 */
-function handleDelete(row) {
- const postIds = row.postId || ids.value;
- proxy.$modal.confirm('是否确认删除岗位编号为"' + postIds + '"的数据项？').then(function() {
-   return delPost(postIds);
- }).then(() => {
-   getList();
-   proxy.$modal.msgSuccess("删除成功");
- }).catch(() => {});
-}
-/** 导出按钮操作 */
-function handleExport() {
- proxy.download("system/post/export", {
-   ...queryParams.value
- }, `post_${new Date().getTime()}.xlsx`);
+   query.status = form.status
 }
 
-getList();
+function resetQuery() {
+   form.status = '3'
+   refresh()
+}
 </script>
 
