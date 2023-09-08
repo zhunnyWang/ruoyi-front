@@ -1,8 +1,8 @@
 <!--
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
- * @LastEditors: wanglu
- * @LastEditTime: 2023-07-24 09:46:26
+ * @LastEditors: Xueying Wang
+ * @LastEditTime: 2023-09-08 14:48:12
  * @Description: 
 -->
 <template>
@@ -11,7 +11,7 @@
         <el-form-item label="审批状态" prop="status">
            <el-select v-model="queryParams.status" placeholder="" clearable style="width: 200px">
               <el-option
-                 v-for="dict in sys_normal_disable"
+                 v-for="dict in approve_status"
                  :key="dict.value"
                  :label="dict.label"
                  :value="dict.value"
@@ -21,7 +21,7 @@
         <el-form-item label="审批事项" prop="status">
            <el-select v-model="queryParams.status" placeholder="" clearable style="width: 200px">
               <el-option
-                 v-for="dict in sys_normal_disable"
+                 v-for="dict in approve_items"
                  :key="dict.value"
                  :label="dict.label"
                  :value="dict.value"
@@ -44,13 +44,12 @@
         <el-table-column label="说明" align="center" prop="postSort" />
         <el-table-column label="审批状态" align="center" prop="status">
            <template #default="scope">
-              <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
+              <dict-tag :options="approve_status" :value="scope.row.status" />
            </template>
         </el-table-column>
         <el-table-column label="操作" width="180" align="center" class-name="small-padding fixed-width">
            <template #default="scope">
-              <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:post:edit']">修改</el-button>
-              <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:post:remove']">删除</el-button>
+              <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:post:edit']">查看</el-button>
            </template>
         </el-table-column>
      </el-table>
@@ -78,7 +77,7 @@
            <el-form-item label="岗位状态" prop="status">
               <el-radio-group v-model="form.status">
                  <el-radio
-                    v-for="dict in sys_normal_disable"
+                    v-for="dict in approve_items"
                     :key="dict.value"
                     :label="dict.value"
                  >{{ dict.label }}</el-radio>
@@ -90,7 +89,7 @@
         </el-form>
         <template #footer>
            <div class="dialog-footer">
-              <el-button type="primary" @click="submitForm">确 定</el-button>
+              <!-- <el-button type="primary" @click="submitForm">确 定</el-button> -->
               <el-button @click="cancel">取 消</el-button>
            </div>
         </template>
@@ -99,10 +98,11 @@
 </template>
 
 <script setup name="Post">
-import { listPost, addPost, delPost, getPost, updatePost } from "@/api/system/post";
+import { listAudit, getAudit, delAudit, addAudit, updateAudit } from "@/api/system/post";
 
 const { proxy } = getCurrentInstance();
-const { sys_normal_disable } = proxy.useDict("sys_normal_disable");
+const { approve_status } = proxy.useDict("approve_status");
+const { approve_items } = proxy.useDict("approve_items");
 
 const postList = ref([]);
 const open = ref(false);

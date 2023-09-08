@@ -137,7 +137,7 @@ export default defineComponent({
 
 
     const layout = layouts[props.element.layout]
-    console.log('props.element', props.element, props.index)
+    // console.log('props.element', props.element, props.index)
     if (layout) {
       return () => layout.call(props, h, props.element, props.index, props.drawingList, attrs)
     }
