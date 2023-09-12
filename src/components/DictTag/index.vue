@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="DictTag">
 // // 记录未匹配的项
 const unmatchArray = ref([]);
 

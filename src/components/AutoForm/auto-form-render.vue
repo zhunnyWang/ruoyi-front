@@ -6,7 +6,7 @@
   </component>
 </template>
 
-<script setup>
+<script setup name="AutoFormRender">
 import { defineComponent, h, ref, watch, watchEffect } from 'vue';
 import MobileLayerAutoForm from './mobileLayerAutoForm';
 

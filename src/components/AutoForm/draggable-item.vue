@@ -116,6 +116,7 @@ function layoutIsNotFound(self) {
 }
 
 export default defineComponent({
+  name: 'DraggableItem',
   props: {
     element: {
       type: Object

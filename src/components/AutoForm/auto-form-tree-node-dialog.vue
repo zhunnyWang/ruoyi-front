@@ -30,7 +30,7 @@
     </template>
   </el-dialog>
 </template>
-<script setup>
+<script setup name="AutoFormTreeNodeDialog">
 import { defineEmits, reactive, ref, watch } from 'vue'
 
 const visible = ref(true)

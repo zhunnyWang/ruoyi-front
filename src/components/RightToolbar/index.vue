@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="RightToolbar">
 const props = defineProps({
   showSearch: {
     type: Boolean,

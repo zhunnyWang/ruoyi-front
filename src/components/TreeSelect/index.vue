@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="TreeSelect">
 
 const { proxy } = getCurrentInstance();
 

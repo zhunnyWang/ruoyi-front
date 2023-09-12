@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="Pagination">
 import { scrollTo } from '@/utils/scroll-to'
 
 const props = defineProps({

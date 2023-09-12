@@ -2,9 +2,10 @@
  * @Author: Xueying Wang
  * @Date: 2023-09-08 15:03:39
  * @LastEditors: Xueying Wang
- * @Description: 
+ * @Description:
  */
-import { ElMessage } from 'element-plus'
+import { reactive, ref, watch } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default function useTable(factoryFetch, options) {
   const dataSource = ref([])
@@ -45,12 +46,12 @@ export default function useTable(factoryFetch, options) {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'warning',
-        }
+        },
       ).then(() => {
         options.deleteFunc(id).then(() => {
           ElMessage({
             message: '删除成功',
-            type: 'success'
+            type: 'success',
           })
           fetchData()
         })

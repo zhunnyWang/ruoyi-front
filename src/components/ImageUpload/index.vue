@@ -45,7 +45,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="ImageUpload">
 import { getToken } from "@/utils/auth";
 
 const props = defineProps({

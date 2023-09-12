@@ -14,7 +14,7 @@
   </el-image>
 </template>
 
-<script setup>
+<script setup name="ImagePreview">
 import { isExternal } from "@/utils/validate";
 
 const props = defineProps({

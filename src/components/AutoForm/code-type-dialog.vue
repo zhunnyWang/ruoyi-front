@@ -29,7 +29,7 @@
     </div>
   </el-dialog>
 </template>
-<script setup>
+<script setup name="CodeTypeDialog">
 import { useAttrs, ref, reactive } from 'vue'
 const props = defineProps({
   showFileName: {

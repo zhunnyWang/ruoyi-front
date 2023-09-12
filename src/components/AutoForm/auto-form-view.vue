@@ -65,7 +65,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="AutoFormView">
 import { formConf, componentsTypes } from "@/config/generator/config.js"
 import { nextTick, onMounted, reactive, ref, watch } from "vue";
 import { Delete, DocumentCopy, Download } from "@element-plus/icons-vue";

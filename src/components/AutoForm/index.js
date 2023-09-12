@@ -1,0 +1,6 @@
+export { default as AutoFormRender } from './auto-form-render.vue'
+export { default as AutoFormRight } from './auto-form-right.vue'
+export { default as AutoFormTreeNodeDialog } from './auto-form-tree-node-dialog.vue'
+export { default as AutoFormView } from './auto-form-view.vue'
+export { default as CodeTypeDialog } from './code-type-dialog.vue'
+export { default as DraggableItem } from './draggable-item.vue'

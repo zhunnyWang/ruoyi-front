@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="FileUpload">
 import { getToken } from "@/utils/auth";
 
 const props = defineProps({

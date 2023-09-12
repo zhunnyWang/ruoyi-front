@@ -368,7 +368,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="AutoFormRight">
 import draggable from 'vuedraggable'
 import { computed, reactive, ref, resolveComponent, watch } from 'vue';
 import { componentsTypes, inputComponents, selectComponents } from "@/config/generator/config";
