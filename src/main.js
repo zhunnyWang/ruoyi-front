@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 18:58:26
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-12 16:01:03
+ * @LastEditTime: 2023-09-12 17:30:46
  * @Description: 
  */
 import { createApp } from 'vue'
@@ -10,7 +10,7 @@ import { createApp } from 'vue'
 import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
-import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs' // 中文语言
 
 import '@/assets/styles/index.scss' // global css
 
@@ -63,7 +63,7 @@ directive(app)
 
 // 使用element-plus 并且设置全局的大小
 app.use(ElementPlus, {
-  locale: locale,
+  locale: zhCn,
   // 支持 large、default、small
   size: Cookies.get('size') || 'default'
 })
