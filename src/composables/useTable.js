@@ -39,24 +39,24 @@ export default function useTable(factoryFetch, options) {
 
   const handleDelete = (options && options.deleteFunc)
     ? (id) => {
-      ElMessageBox.confirm(
-        '确认删除吗？',
-        'Warning',
-        {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'warning',
-        },
-      ).then(() => {
-        options.deleteFunc(id).then(() => {
-          ElMessage({
-            message: '删除成功',
-            type: 'success',
+        ElMessageBox.confirm(
+          '确认删除吗？',
+          'Warning',
+          {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+          },
+        ).then(() => {
+          options.deleteFunc(id).then(() => {
+            ElMessage({
+              message: '删除成功',
+              type: 'success',
+            })
+            fetchData()
           })
-          fetchData()
         })
-      })
-    }
+      }
     : () => null
 
   watch([pageSize, current, filtersObj], () => {

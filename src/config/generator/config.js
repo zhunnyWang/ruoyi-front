@@ -197,7 +197,6 @@ export const selectComponents = [
                 label: '选项1-1'
             }]
         }],
-        'popper-append-to-body': false,
         'teleported': false,
         dataType: 'dynamic',
         labelKey: 'label',

@@ -14,7 +14,7 @@ import { useDebounce } from '@/composables/useDebounce'
  * @return {*} width 当前组件的宽度
  * @return {*} height  当前组件的高度
  */
-export default function useSize(observeCB) {
+export default function useSize(observeCB = () => {}) {
   const root = ref(document.createElement('div'))
   const width = ref(0)
   const height = ref(0)

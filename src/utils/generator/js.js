@@ -242,7 +242,7 @@ function formatJson(data) {
 
 function buildexport(conf, type, data, rules, selectOptions, uploadVar, props, methods) {
   const str = `
-  import {reactive, ref, onMounted, useAttrs,defineEmits,resolveComponent} from 'vue';
+  import {reactive, ref, onMounted, useAttrs, resolveComponent} from 'vue';
   ${type === 'dialog' ? "const attrs = useAttrs();" : ''}
   const emits = defineEmits( ${type === 'dialog' ? "['update:visible']" : ''});
   const props = defineProps({

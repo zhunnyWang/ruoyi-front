@@ -2,12 +2,12 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-08 17:01:03
+ * @LastEditTime: 2023-09-13 16:45:20
  * @Description: 申请审批
 -->
 <template>
   <div class="app-container">
-    <el-form :model="form" ref="queryRef" :inline="true">
+    <el-form ref="queryRef" :model="form" :inline="true">
       <el-form-item label="审批状态" prop="status">
         <el-select v-model="form.status" placeholder="" clearable style="width: 200px">
           <el-option v-for="dict in approve_status" :key="dict.value" :label="dict.label" :value="dict.value" />
@@ -19,8 +19,12 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-        <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="Search" @click="handleQuery">
+          搜索
+        </el-button>
+        <el-button icon="Refresh" @click="resetQuery">
+          重置
+        </el-button>
       </el-form-item>
     </el-form>
 
@@ -33,27 +37,37 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="text" icon="Edit" @click="handleView(scope.row)"
-            v-hasPermi="['system:audit:edit']">查看</el-button>
-          <el-button type="text" icon="DocumentChecked" @click="handleAudit(scope.row)"
-            v-hasPermi="['system:audit:remove']">审批</el-button>
+        <template #default="scope">
+          <el-button
+            v-hasPermi="['system:audit:edit']" type="text" icon="Edit"
+            @click="handleView(scope.row)"
+          >
+            查看
+          </el-button>
+          <el-button
+            v-hasPermi="['system:audit:remove']" type="text" icon="DocumentChecked"
+            @click="handleAudit(scope.row)"
+          >
+            审批
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="paginationParams.total > 0" :total="paginationParams.total"
-      v-model:page="paginationParams.current" v-model:limit="paginationParams.pageSize" @pagination="paginationChange" />
+    <pagination
+      v-show="paginationParams.total > 0" v-model:page="paginationParams.current"
+      v-model:limit="paginationParams.pageSize" :total="paginationParams.total" @pagination="paginationChange"
+    />
   </div>
 </template>
 
 <script setup name="Audit">
-import { listAudit, getAudit, delAudit, addAudit, updateAudit } from "@/api/system/audit"
+import { listAudit } from '@/api/system/audit'
 import useTable from '@/composables/useTable'
 
-const { proxy } = getCurrentInstance();
-const { approve_status } = proxy.useDict("approve_status");
-const { approve_items } = proxy.useDict("approve_items");
+const { proxy } = getCurrentInstance()
+const { approve_status } = proxy.useDict('approve_status')
+const { approve_items } = proxy.useDict('approve_items')
 
 // 查询参数
 const query = reactive({
@@ -88,7 +102,7 @@ onMounted(() => {
 // 搜索相关
 const form = reactive({
   status: '3',
-  stepType: '3'
+  stepType: '3',
 })
 /** 搜索按钮操作 */
 function handleQuery() {
