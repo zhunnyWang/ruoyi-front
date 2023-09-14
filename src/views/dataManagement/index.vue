@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-13 17:17:12
+ * @LastEditTime: 2023-09-14 09:51:11
  * @Description:
 -->
 <template>
@@ -20,9 +20,28 @@
         个人数据
       </p>
       <FileTree v-loading="dataPersonalLoading" :data="dataPersonal" />
-      <el-button text type="primary" icon="Plus" class="w-full my-2">
-        新增类别
-      </el-button>
+      <Dialog title="新增类别">
+        <template #activator="{ on }">
+          <el-button text type="primary" icon="Plus" class="w-full my-2" @click="on">
+            新增类别
+          </el-button>
+        </template>
+        <template #default>
+          <el-form :model="queryParams">
+            <el-form-item label="类别名称" prop="typeName">
+              <el-input v-model="queryParams.typeName" placeholder="请输入类别名称" clearable />
+            </el-form-item>
+          </el-form>
+        </template>
+        <template #footer="{ hide }">
+          <el-button @click="hide">
+            取消
+          </el-button>
+          <el-button type="primary" @click="handleAddType">
+            确定
+          </el-button>
+        </template>
+      </Dialog>
       <el-button type="primary" icon="Upload" class="w-full ml-0!">
         上传个人数据
       </el-button>
@@ -64,6 +83,7 @@
 
 <script setup>
 import FileTree from './components/FileTree'
+import Dialog from '@/components/Dialog'
 import useTable from '@/composables/useTable'
 
 // fileTree相关
@@ -140,6 +160,15 @@ onMounted(async () => {
 
 const handleNodeClick = (data) => {
   console.log(data)
+}
+
+// 新增类别
+const queryParams = ref({
+  typeName: '',
+})
+
+const handleAddType = () => {
+  console.log(queryParams.value)
 }
 
 // table相关

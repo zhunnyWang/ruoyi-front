@@ -1,7 +1,7 @@
 <!--
  * @Author: Xueying Wang
  * @Date: 2022-11-23 14:51:24
- * @LastEditTime: 2023-09-13 17:28:48
+ * @LastEditTime: 2023-09-14 09:30:37
  * @LastEditors: Xueying Wang
  * @Description: 可远程请求的Dialog封装
 -->
@@ -21,7 +21,7 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref, useAttrs } from 'vue'
 import useDialogModel from '../../composables/useDialogModel'
 
@@ -40,8 +40,8 @@ const emit = defineEmits(['update:modelValue'])
 
 const attrs = useAttrs()
 
-const isLoading = ref<boolean>(true)
-const info: Record<string, any> = ref({})
+const isLoading = ref(true)
+const info = ref({})
 const { isActive } = useDialogModel(props, emit)
 
 async function on() {

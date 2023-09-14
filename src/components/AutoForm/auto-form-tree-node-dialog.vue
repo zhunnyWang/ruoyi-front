@@ -1,6 +1,8 @@
 <template>
-  <el-dialog :model-value="visible" title="添加选项" :close-on-click-modal="false" :modal-append-to-body="false"
-    @open="onOpen" @close="onClose">
+  <el-dialog
+    :model-value="visible" title="添加选项" :close-on-click-modal="false" :modal-append-to-body="false"
+    @open="onOpen" @close="onClose"
+  >
     <el-form ref="ruleFormRef" :model="formData" :rules="rules" label-width="100px">
       <el-col :span="24">
         <el-form-item label="选项名" prop="label">
@@ -12,8 +14,10 @@
           <el-input v-model="formData.value" placeholder="请输入选项值" clearable>
             <template #append>
               <el-select v-model="dataType" :style="{ width: '100px' }">
-                <el-option v-for="(item, index) in dataTypeOptions" :key="index" :label="item.label" :value="item.value"
-                  :disabled="item.disabled" />
+                <el-option
+                  v-for="(item, index) in dataTypeOptions" :key="index" :label="item.label" :value="item.value"
+                  :disabled="item.disabled"
+                />
               </el-select>
             </template>
           </el-input>
@@ -30,51 +34,53 @@
     </template>
   </el-dialog>
 </template>
-<script setup name="AutoFormTreeNodeDialog">
-import { defineEmits, reactive, ref, watch } from 'vue'
 
-const visible = ref(true)
+<script setup name="AutoFormTreeNodeDialog">
+import { reactive, ref, watch } from 'vue'
 
 const props = defineProps({
   title: {
     type: String,
-    default: '提示'
-  }
+    default: '提示',
+  },
 })
 
 const emits = defineEmits(['commit', 'close'])
+
+const visible = ref(true)
+
 const ruleFormRef = ref()
-const id = ref(100);
+const id = ref(100)
 const formData = reactive({
   label: undefined,
-  value: undefined
+  value: undefined,
 })
 const rules = ref({
   label: [
     {
       required: true,
       message: '请输入选项名',
-      trigger: 'blur'
-    }
+      trigger: 'blur',
+    },
   ],
   value: [
     {
       required: true,
       message: '请输入选项值',
-      trigger: 'blur'
-    }
-  ]
+      trigger: 'blur',
+    },
+  ],
 })
 const dataType = ref('string')
 const dataTypeOptions = ref([
   {
     label: '字符串',
-    value: 'string'
+    value: 'string',
   },
   {
     label: '数字',
-    value: 'number'
-  }
+    value: 'number',
+  },
 ])
 
 function isNumberStr(str) {
@@ -84,7 +90,6 @@ function isNumberStr(str) {
 watch(() => formData.value, (val) => {
   dataType.value = isNumberStr(val) ? 'number' : 'string'
 })
-
 
 function onOpen() {
   formData.label = undefined
@@ -96,20 +101,17 @@ function onClose() {
 }
 
 function handleConfirm() {
-  if ((isNumberStr(formData.value) && dataType.value !== 'number') || (!isNumberStr(formData.value) && dataType.value !== 'string')) {
+  if ((isNumberStr(formData.value) && dataType.value !== 'number') || (!isNumberStr(formData.value) && dataType.value !== 'string'))
     dataType.value = isNumberStr(formData.value) ? 'number' : 'string'
-  }
-  ruleFormRef.value.validate(valid => {
+
+  ruleFormRef.value.validate((valid) => {
     if (!valid) return
-    if (dataType.value === 'number') {
+    if (dataType.value === 'number')
       formData.value = parseFloat(formData.value)
-    }
+
     formData.id = id.value++
     emits('commit', formData)
     onClose()
   })
-
 }
-
-
 </script>
