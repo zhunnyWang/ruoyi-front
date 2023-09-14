@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 18:58:26
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-13 18:51:21
+ * @LastEditTime: 2023-09-14 09:01:38
  * @Description: 
 -->
 <!--
@@ -19,7 +19,6 @@
         自定义
       </el-button>
     </div>
-    <!-- {{ layout }} -->
     <grid-layout
         :layout.async="layout"
         :col-num="24"
@@ -129,9 +128,6 @@ const router = useRouter()
 
 // 初始化面板项
 layout.value = layoutStore.getLayout()
-      // if (!layout.value) {
-      //   this.checkPanelItem = this.panels
-      // }
 
 
 

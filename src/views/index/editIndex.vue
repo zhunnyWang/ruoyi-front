@@ -15,9 +15,9 @@
           </el-button>
         </div>
         <div class="saveBtn-box">
-          <el-button plain :icon="CloseBold" @click="exitEdit">
+          <!-- <el-button plain :icon="CloseBold" @click="exitEdit">
             退出编辑
-          </el-button>
+          </el-button> -->
           <el-button plain :icon="Select" @click="saveLayoutData">
             保存
           </el-button>
@@ -187,8 +187,7 @@ const router = useRouter()
 const layoutStore = useLayoutStore()
 const layout = ref([])
 
-// 相当于vue2的create
-console.log('layoutStore.getLayout()',layoutStore.getLayout())
+
 layout.value = layoutStore.getLayout()
       if (layout.value === null) {
         // this.checkPanelItem = panelOptions
@@ -200,9 +199,6 @@ layout.value = layoutStore.getLayout()
         // }
       }
 
-onMounted(()=>{
-  // initPanel()
-})
 
 // 退出编辑
 function exitEdit() {
@@ -210,33 +206,19 @@ function exitEdit() {
 }
  // 保存最新面板布局参数
 function saveLayoutData() {
-  console.log('layoutStore.setLayout(layout.value)',layoutStore.setLayout(layout.value))
   layoutStore.setLayout(layout.value)
+  console.log('xx',layoutStore.getLayout())
   if (layoutStore.getLayout()) {
     ElMessage({
-      message: '恭喜你，这是一条成功消息',
-      type: 'success'
-    }).success({
       message: '保存成功',
-      type: 'success',
-      duration: 500
+      type: 'success'
     })
     router.push('/index')
-  }
-}
-
-// 初始化面板项
-function initPanel() {
-
-  layout = JSON.parse(layoutStore.getLayout())
-  if (layout === null) {
-    // this.checkPanelItem = panelOptions
-    layout = initPanelsLayout
-  } else {
-    layout = layout
-    // for (const attr in this.layout) {
-    //   this.checkPanelItem[attr] = this.layout[attr].name
-    // }
+  }else{
+    ElMessage({
+      message: '保存失败',
+      type: 'error'
+  })
   }
 }
 </script>
