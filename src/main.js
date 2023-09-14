@@ -3,6 +3,8 @@
  * @Date: 2023-07-24 18:58:26
  * @LastEditors: Xueying Wang
  * @LastEditTime: 2023-09-12 17:30:46
+ * @LastEditors: wanglu
+ * @LastEditTime: 2023-09-13 10:38:20
  * @Description: 
  */
 import { createApp } from 'vue'
@@ -37,6 +39,27 @@ import { useDict } from '@/utils/dict'
 import { parseTime, resetForm, addDateRange, handleTree, selectDictLabel, selectDictLabels } from '@/utils/ruoyi'
 import { registerGlobComp } from '@/utils/registerGlobComp'
 
+// 导入VueGridLayout自由拖拽组件
+import gridLayout  from 'vue-grid-layout' 
+
+// 分页组件
+import Pagination from '@/components/Pagination'
+// 自定义表格工具组件
+import RightToolbar from '@/components/RightToolbar'
+// 富文本组件
+import Editor from "@/components/Editor"
+// 文件上传组件
+import FileUpload from "@/components/FileUpload"
+// 图片上传组件
+import ImageUpload from "@/components/ImageUpload"
+// 图片预览组件
+import ImagePreview from "@/components/ImagePreview"
+// 自定义树选择组件
+import TreeSelect from '@/components/TreeSelect'
+// 字典标签组件
+import DictTag from '@/components/DictTag'
+
+import ComponentAutoRegister from "@/utils/componentAutoRegister"
 
 const app = createApp(App)
 
@@ -54,10 +77,13 @@ app.config.globalProperties.selectDictLabels = selectDictLabels
 app.component('svg-icon', SvgIcon)
 registerGlobComp(app)
 
+
 app.use(router)
 app.use(store)
 app.use(plugins)
 app.use(elementIcons)
+app.use(gridLayout)
+app.component('svg-icon', SvgIcon)
 
 directive(app)
 

@@ -61,12 +61,19 @@ export const constantRoutes = [
     path: '',
     component: Layout,
     redirect: '/index',
+    meta: { title: '首页', icon: 'dashboard', affix: false },
     children: [
       {
         path: '/index',
         component: () => import('@/views/index'),
         name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        // meta: { title: '首页', icon: 'dashboard', affix: true }
+      },
+      {
+        path: '/index/editIndex',
+        component: () => import('@/views/index/editIndex.vue'),
+        name: 'editIndex',
+        // meta: { title: '编辑首页' }
       }
     ]
   },
