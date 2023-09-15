@@ -3,13 +3,13 @@
  * @Date: 2023-07-24 19:29:18
  * @LastEditors: wanglu
  * @LastEditTime: 2023-07-25 10:23:24
- * @Description: 
+ * @Description:
 -->
 <template>
   <el-card class="box-card">
     <div class="box-card__img pa-1">
       <el-image
-        class="box-card__img--image" 
+        class="box-card__img--image"
         :src="props.card.productImg ? card.productImg : '/images/no-data.jpg'"
       />
     </div>
@@ -31,66 +31,63 @@
     </div>
     <div class="box-card__operator flex justify-between  items-center mt-4">
       <div class="box-card__operator--icon">
-          <el-tooltip
-            class="box-item"
-            effect="light"
-            content="订阅次数"
-            placement="top"
-          >
-          <img class="box-card__operator--iconNum-icon"  :src="card.subscribeStatus === 1 ? '/images/lh/orderLightIcon.svg' :'/images/lh/orderIcon.svg'">
-          </el-tooltip>
-          <div class="box-card__operator--iconNum-num">
-            {{ card.subscribeNumber }}
-          </div>
+        <el-tooltip
+          class="box-item"
+          effect="light"
+          content="订阅次数"
+          placement="top"
+        >
+          <img class="box-card__operator--iconNum-icon" :src="card.subscribeStatus === 1 ? '/images/lh/orderLightIcon.svg' : '/images/lh/orderIcon.svg'">
+        </el-tooltip>
+        <div class="box-card__operator--iconNum-num">
+          {{ card.subscribeNumber }}
         </div>
-        <div class="box-card__operator--icon">
-          <el-tooltip
-            class="box-item"
-            effect="light"
-            content="收藏次数"
-            placement="top"
-          >
-          <img class="box-card__operator--iconNum-icon"  :src="card.collectStatus === 1 ? '/images/lh/starLightIcon.svg' :'/images/lh/starIcon.svg'">
-          </el-tooltip>
-          <div class="box-card__operator--iconNum-num">
-            {{ card.collectNumber }}
-          </div>
+      </div>
+      <div class="box-card__operator--icon">
+        <el-tooltip
+          class="box-item"
+          effect="light"
+          content="收藏次数"
+          placement="top"
+        >
+          <img class="box-card__operator--iconNum-icon" :src="card.collectStatus === 1 ? '/images/lh/starLightIcon.svg' : '/images/lh/starIcon.svg'">
+        </el-tooltip>
+        <div class="box-card__operator--iconNum-num">
+          {{ card.collectNumber }}
         </div>
-        <div class="box-card__operator--icon">
-          <el-tooltip
-            class="box-item"
-            effect="light"
-            content="上架时间"
-            placement="top"
-          >
-            <el-icon class="box-card__operator--iconNum-icon">
-              <Clock />
-            </el-icon>
-          </el-tooltip>
-          <div class="box-card__operator--iconNum-num">
-            {{ card.publishDate }}
-          </div>
+      </div>
+      <div class="box-card__operator--icon">
+        <el-tooltip
+          class="box-item"
+          effect="light"
+          content="上架时间"
+          placement="top"
+        >
+          <el-icon class="box-card__operator--iconNum-icon">
+            <Clock />
+          </el-icon>
+        </el-tooltip>
+        <div class="box-card__operator--iconNum-num">
+          {{ card.publishDate }}
         </div>
-
+      </div>
     </div>
   </el-card>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-
 interface CardItem {
   id: number
-  productImg:string
-  title:string
-  describe:string
-  label:string
-  address:string
-  subscribeNumber:number
-  collectNumber:number
-  publishDate:string
-  subscribeStatus:number
-  collectStatus:number
+  productImg: string
+  title: string
+  describe: string
+  label: string
+  address: string
+  subscribeNumber: number
+  collectNumber: number
+  publishDate: string
+  subscribeStatus: number
+  collectStatus: number
 }
 
 const props = defineProps<{
