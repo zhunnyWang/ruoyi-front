@@ -2,9 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 18:58:26
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-15 16:57:05
- * @LastEditors: wanglu
- * @LastEditTime: 2023-09-13 10:38:20
+ * @LastEditTime: 2023-09-15 17:13:00
  * @Description:
  */
 import { createApp } from 'vue'
@@ -42,7 +40,19 @@ import { useDict } from '@/utils/dict'
 import { addDateRange, handleTree, parseTime, resetForm, selectDictLabel, selectDictLabels } from '@/utils/ruoyi'
 import { registerGlobComp } from '@/utils/registerGlobComp'
 
+// 引入iconfont
+import './assets/font/iconfont.css'
+
 // 导入VueGridLayout自由拖拽组件
+
+// 分页组件
+// 自定义表格工具组件
+// 富文本组件
+// 文件上传组件
+// 图片上传组件
+// 图片预览组件
+// 自定义树选择组件
+// 字典标签组件
 
 const app = createApp(App)
 

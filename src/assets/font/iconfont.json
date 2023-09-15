@@ -1,0 +1,107 @@
+{
+  "id": "4177670",
+  "name": "大数据法律监督",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5536244",
+      "name": "标识模型",
+      "font_class": "biaoshimoxing",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "8206767",
+      "name": "模型",
+      "font_class": "mx",
+      "unicode": "e75f",
+      "unicode_decimal": 59231
+    },
+    {
+      "icon_id": "11399571",
+      "name": "复合模型",
+      "font_class": "fuhemoxing",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "673799",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e6cb",
+      "unicode_decimal": 59083
+    },
+    {
+      "icon_id": "970763",
+      "name": "技术市场",
+      "font_class": "jishushichang-copy",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "3731063",
+      "name": "跳骚市场",
+      "font_class": "tiaosaoshichang",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "5482363",
+      "name": "审批模型-设计",
+      "font_class": "custom-design",
+      "unicode": "e688",
+      "unicode_decimal": 59016
+    },
+    {
+      "icon_id": "6211855",
+      "name": "3-1可视化",
+      "font_class": "-keshihua",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "7045322",
+      "name": "数据管理",
+      "font_class": "shujuguanli",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "7269313",
+      "name": "我的申请-默认",
+      "font_class": "wodeshenqing-moren",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "9424873",
+      "name": "模型运行",
+      "font_class": "moxingyunhang",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "9749390",
+      "name": "申请审批",
+      "font_class": "office-supplies-apply-for-approval",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "15643744",
+      "name": "线索管理",
+      "font_class": "xiansuoguanli",
+      "unicode": "e6b2",
+      "unicode_decimal": 59058
+    },
+    {
+      "icon_id": "17606343",
+      "name": "模型管理",
+      "font_class": "moxingguanli",
+      "unicode": "e6aa",
+      "unicode_decimal": 59050
+    }
+  ]
+}

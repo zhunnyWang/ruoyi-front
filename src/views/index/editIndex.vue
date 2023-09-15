@@ -5,15 +5,50 @@
       <div class="addPanel-container">
         <div class="panel-text-box flex items-center">
           <el-icon><Grid /> </el-icon>
-          <span>面板 / </span>
-          <span>{{ initPanelsLayout.length }}</span>
+          <span class="pl-1">面板 / {{ layout.length }}</span>
         </div>
-        <el-divider direction="vertical"></el-divider>
-        <div class="add-panel-box" @click="addPanelDialog = true">
-          <el-button plain :icon="Plus" >
-            添加面板
-          </el-button>
-        </div>
+        <el-divider direction="vertical" />
+        <Dialog title="选择面板">
+          <template #activator="{ on }">
+            <el-button plain :icon="Plus" class="ml-2" @click="on">
+              添加面板
+            </el-button>
+          </template>
+          <template #default>
+            <el-checkbox
+              v-model="checkAll"
+              :indeterminate="isIndeterminate"
+              @change="handleCheckAllChange"
+            >
+              全选
+            </el-checkbox>
+            <div style="margin: 15px 0;" />
+            <el-checkbox-group
+              v-model="checkPanelItem"
+              @change="handleCheckedCitiesChange"
+            >
+              <el-checkbox
+                v-for="(item, index) in panels"
+                :key="index"
+                :disabled="item === '个人信息'"
+                :label="item"
+              >
+                {{ item }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </template>
+          <template #footer="{ hide }">
+            <el-button @click="hide">
+              取消
+            </el-button>
+            <el-button @click="resetPanel">
+              恢复默认设置
+            </el-button>
+            <el-button type="primary" @click="getPanelItem">
+              确定
+            </el-button>
+          </template>
+        </Dialog>
         <div class="saveBtn-box">
           <!-- <el-button plain :icon="CloseBold" @click="exitEdit">
             退出编辑
@@ -24,39 +59,9 @@
         </div>
       </div>
     </div>
-
-    <!-- 面板对话框 -->
-    <!-- <el-dialog title="选择面板" :visible.sync="addPanelDialog" width="40%">
-      <span>
-        <el-checkbox
-          :indeterminate="isIndeterminate"
-          v-model="checkAll"
-          @change="handleCheckAllChange"
-          >全选</el-checkbox
-        >
-        <div style="margin: 15px 0;"></div>
-        <el-checkbox-group
-          v-model="checkPanelItem"
-          @change="handleCheckedCitiesChange"
-        >
-          <el-checkbox
-            :disabled="item === '个人信息'"
-            v-for="(item, index) in panels"
-            :label="item"
-            :key="index"
-            >{{ item }}</el-checkbox
-          >
-        </el-checkbox-group>
-      </span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="addPanelDialog = false">取 消</el-button>
-        <el-button @click="resetPanel">恢复默认设置</el-button>
-        <el-button type="primary" @click="getPanelItem">确 定</el-button>
-      </span>
-    </el-dialog> -->
     <!-- 自定义布局项 -->
     <grid-layout
-      :layout.sync="layout"
+      v-model:layout="layout"
       :col-num="24"
       :row-height="30"
       :is-draggable="true"
@@ -68,158 +73,179 @@
     >
       <grid-item
         v-for="item in layout"
+        :key="item.i"
         :x="item.x"
         :y="item.y"
         :w="item.w"
         :h="item.h"
         :i="item.i"
-        :key="item.i"
         :static="item.static"
       >
-        <person
-          v-if="item.name === '个人信息'"
-          :editPersonStyle="true"
+        <MyTasks
+          v-if="item.name === '我的待办'"
           :id="item.i"
           @deletePanelItemEvent="deletePanelItem"
-        ></person>
-        <wait-matter
-          v-if="item.name === '待办事项'"
+        />
+        <MyData
+          v-if="item.name === '我的数据'"
           :id="item.i"
           @deletePanelItemEvent="deletePanelItem"
-        ></wait-matter>
-        <notice
-          v-if="item.name === '公告栏'"
+        />
+        <MyModel
+          v-if="item.name === '我的模型'"
           :id="item.i"
           @deletePanelItemEvent="deletePanelItem"
-        ></notice>
-        <document
-          v-if="item.name === '待办公文'"
+        />
+        <ModelRun
+          v-if="item.name === '我的模型运行任务'"
           :id="item.i"
           @deletePanelItemEvent="deletePanelItem"
-        ></document>
-        <quick-operation
-          v-if="item.name === '快捷操作'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></quick-operation>
-        <often-app
-          v-if="item.name === '常用应用'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></often-app>
-        <often-apply
-          v-if="item.name === '常用流程'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></often-apply>
-        <today-work
-          v-if="item.name === '我的日程'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></today-work>
-        <remind
-          v-if="item.name === '督办提醒'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></remind>
-        <meeting
-          v-if="item.name === '我的会议'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></meeting>
-        <my-task
-          v-if="item.name === '我的任务'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></my-task>
-        <process
-          v-if="item.name === '待办流程'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></process>
-        <my-document
-          v-if="item.name === '督办公文'"
-          :id="item.i"
-          @deletePanelItemEvent="deletePanelItem"
-        ></my-document>
+        />
       </grid-item>
     </grid-layout>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
-import notice from '@/views/index/components/WaitMatter.vue'
-import document from '@/views/index/components/WaitMatter.vue'
-import quickOperation from '@/views/index/components/WaitMatter.vue'
-import oftenApp from '@/views/index/components/WaitMatter.vue'
-import oftenApply from '@/views/index/components/WaitMatter.vue'
-import todayWork from '@/views/index/components/WaitMatter.vue'
-import Person from '@/views/index/components/WaitMatter.vue'
-import waitMatter from '@/views/index/components/WaitMatter'
-import Remind from '@/views/index/components/WaitMatter.vue'
-import Meeting from '@/views/index/components/WaitMatter.vue'
-import MyTask from '@/views/index/components/WaitMatter.vue'
-import Process from '@/views/index/components/WaitMatter.vue'
-import MyDocument from '@/views/index/components/WaitMatter.vue'
-
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-
-
 import {
-  Check,
-  Delete,
-  Edit,
-  Message,
-  CloseBold,
-  Select,
   Grid,
   Plus,
+  Select,
 } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { initPanelsLayout } from './js/layout'
+import Dialog from '@/components/Dialog'
+import MyTasks from '@/views/index/src/MyTasks.vue'
+import MyData from '@/views/index/src/MyData.vue'
+import MyModel from '@/views/index/src/MyModel.vue'
+import ModelRun from '@/views/index/src/ModelRun.vue'
 
 import useLayoutStore from '@/store/modules/layout'
 
-import { initPanelsLayout } from './js/layout'
-
-import { useRouter } from 'vue-router'
-const router = useRouter()  
+const router = useRouter()
 
 const layoutStore = useLayoutStore()
 const layout = ref([])
+const panelOptions = ref([])
+const checkPanelItem = ref([])
+const checkAll = ref(false)
+const isIndeterminate = ref(true)
+for (const attr in initPanelsLayout)
+  panelOptions.value.push(initPanelsLayout[attr].name)
 
+const panels = ref(panelOptions)
 
 layout.value = layoutStore.getLayout()
-      if (layout.value === null) {
-        // this.checkPanelItem = panelOptions
-        layout.value = initPanelsLayout
-      } else {
-       layout.value = layout.value
-        // for (const attr in this.layout) {
-        //   this.checkPanelItem[attr] = this.layout[attr].name
-        // }
-      }
-
+if (layout.value === null) {
+  checkPanelItem.value = panelOptions
+  layout.value = initPanelsLayout
+}
+else {
+  layout.value = layout.value
+  for (const attr in layout.value)
+    checkPanelItem.value[attr] = layout.value[attr].name
+}
 
 // 退出编辑
 function exitEdit() {
   router.push('/index')
 }
- // 保存最新面板布局参数
+// 保存最新面板布局参数
 function saveLayoutData() {
   layoutStore.setLayout(layout.value)
-  console.log('xx',layoutStore.getLayout())
   if (layoutStore.getLayout()) {
     ElMessage({
       message: '保存成功',
-      type: 'success'
+      type: 'success',
     })
-    router.push('/index')
-  }else{
+  }
+  else {
     ElMessage({
       message: '保存失败',
-      type: 'error'
-  })
+      type: 'error',
+    })
   }
+  router.push('/index')
+}
+// 全选面板选项
+function handleCheckAllChange(val) {
+  // this.checkPanelItem = val ? this.panels : ['个人信息']
+  // this.isIndeterminate = false
+}
+// 多选面板选项
+function handleCheckedCitiesChange(value) {
+  // const checkedCount = value.length
+  // this.checkAll = checkedCount === this.panels.length
+  // this.isIndeterminate =
+  //   checkedCount > 0 && checkedCount < this.panels.length
+}
+// 添加面板
+function getPanelItem() {
+  // const newLayout = []
+  // const panelName = []
+  // const layout = JSON.parse(window.sessionStorage.getItem('layout'))
+  // if (layout) {
+  //   for (const attr in layout) {
+  //     this.checkPanelItem.filter(item => {
+  //       if (item === layout[attr].name) {
+  //         newLayout.push(layout[attr])
+  //         panelName.push(layout[attr].name)
+  //       }
+  //     })
+  //   }
+  //   const addPanel = this.checkPanelItem
+  //     .concat(panelName)
+  //     .filter((item, i, arr) => {
+  //       return arr.indexOf(item) === arr.lastIndexOf(item)
+  //     })
+  //   for (const attr in this.initLayout) {
+  //     addPanel.filter(item => {
+  //       if (item === this.initLayout[attr].name) {
+  //         newLayout.push(this.initLayout[attr])
+  //       }
+  //     })
+  //   }
+  //   this.layout = newLayout
+  // } else {
+  //   console.log(this.checkPanelItem)
+  //   const result = []
+  //   for (const attr in this.initLayout) {
+  //     result.push(this.initLayout[attr].name)
+  //     this.checkPanelItem.filter((item, index) => {
+  //       if (item === this.initLayout[attr].name) {
+  //         newLayout.push(this.initLayout[attr])
+  //       }
+  //     })
+  //   }
+  //   this.layout = newLayout
+  // }
+}
+// 恢复默认设置面板
+function resetPanel() {
+  checkPanelItem.value = panels.value
+}
+// 根据面板id删除面板
+function deletePanelItem(panelId) {
+  const deleteName = []
+  layout.value = Array.from(layout.value)
+  // console.log(this.initLayout)
+  for (const attr in layout) {
+    if (layout.value[attr].i === panelId) {
+      deleteName.push(layout[attr].name)
+      delete layout[attr]
+    }
+  }
+  layout.value = layout.value.filter((item) => {
+    if (item !== undefined)
+      return item
+  })
+  checkPanelItem.value = checkPanelItem.value
+    .concat(deleteName)
+    .filter((item, index, Arr) => {
+      return Arr.indexOf(item) === Arr.lastIndexOf(item)
+    })
 }
 </script>
 
