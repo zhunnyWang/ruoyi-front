@@ -2,23 +2,26 @@
  * @Author: wanglu
  * @Date: 2023-07-24 18:58:26
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-12 17:30:46
+ * @LastEditTime: 2023-09-15 16:57:05
  * @LastEditors: wanglu
  * @LastEditTime: 2023-09-13 10:38:20
- * @Description: 
+ * @Description:
  */
 import { createApp } from 'vue'
 
 import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
+
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs' // 中文语言
 
 import '@/assets/styles/index.scss' // global css
 
+import gridLayout from 'vue-grid-layout'
 import App from './App'
 import store from './store'
 import router from './router'
+
 import directive from './directive' // directive
 
 // 注册指令
@@ -36,32 +39,27 @@ import './permission' // permission control
 import 'virtual:uno.css'
 
 import { useDict } from '@/utils/dict'
-import { parseTime, resetForm, addDateRange, handleTree, selectDictLabel, selectDictLabels } from '@/utils/ruoyi'
+import { addDateRange, handleTree, parseTime, resetForm, selectDictLabel, selectDictLabels } from '@/utils/ruoyi'
 import { registerGlobComp } from '@/utils/registerGlobComp'
 
 // 导入VueGridLayout自由拖拽组件
-import gridLayout  from 'vue-grid-layout' 
-
-// 分页组件
-import Pagination from '@/components/Pagination'
-// 自定义表格工具组件
-import RightToolbar from '@/components/RightToolbar'
-// 富文本组件
-import Editor from "@/components/Editor"
-// 文件上传组件
-import FileUpload from "@/components/FileUpload"
-// 图片上传组件
-import ImageUpload from "@/components/ImageUpload"
-// 图片预览组件
-import ImagePreview from "@/components/ImagePreview"
-// 自定义树选择组件
-import TreeSelect from '@/components/TreeSelect'
-// 字典标签组件
-import DictTag from '@/components/DictTag'
-
-import ComponentAutoRegister from "@/utils/componentAutoRegister"
 
 const app = createApp(App)
+
+// 全局指令
+app.directive('cascader', {
+  mounted(el, binding) {
+    const cascaderDom = el.querySelector(
+      '.el-cascader-menu__wrap .el-scrollbar__wrap', // 滚动条所在元素
+    )
+    if (cascaderDom) {
+      cascaderDom.addEventListener('scroll', (e) => {
+        console.log(e)
+        binding.value(e)
+      })
+    }
+  },
+})
 
 // 全局方法挂载
 app.config.globalProperties.useDict = useDict
@@ -74,16 +72,15 @@ app.config.globalProperties.selectDictLabel = selectDictLabel
 app.config.globalProperties.selectDictLabels = selectDictLabels
 
 // 全局组件挂载
-app.component('svg-icon', SvgIcon)
+app.component('SvgIcon', SvgIcon)
 registerGlobComp(app)
-
 
 app.use(router)
 app.use(store)
 app.use(plugins)
 app.use(elementIcons)
 app.use(gridLayout)
-app.component('svg-icon', SvgIcon)
+app.component('SvgIcon', SvgIcon)
 
 directive(app)
 
@@ -91,7 +88,7 @@ directive(app)
 app.use(ElementPlus, {
   locale: zhCn,
   // 支持 large、default、small
-  size: Cookies.get('size') || 'default'
+  size: Cookies.get('size') || 'default',
 })
 
 app.mount('#app')
