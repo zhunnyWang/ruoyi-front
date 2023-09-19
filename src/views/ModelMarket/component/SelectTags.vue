@@ -1,27 +1,27 @@
 <template>
   <div class="select-tags">
     <section class="title">
-      <span :title="conditionData.title">{{ conditionData.title }}</span> 
+      <span :title="conditionData.title">{{ conditionData.title }}</span>
     </section>
     <section class="content">
       <!-- 默认选项 -->
       <el-row v-if="defaultOption.label" class="zlc-tag-wrap">
         <el-col
-        :sm="6" :md="4" :lg="2" 
+          :sm="6" :md="4" :lg="2"
           class="zlc-tag flex-row mt-2"
-          :class="{'zlc-tag__checked': defaultOption.checked}"
+          :class="{ 'zlc-tag__checked': defaultOption.checked }"
           @click.stop="handleSelectDefault"
         >
           <span class="flex justify-center">{{ defaultOption.label }}</span>
         </el-col>
       </el-row>
       <!-- 实际选项 -->
-      <el-row v-for="(tag, index) in tagList" :key="index" :gutter="10" class="zlc-tag-wrap">
+      <el-row v-for="(tag, index) in tagList" :key="index" class="zlc-tag-wrap">
         <el-col
           class="zlc-tag flex-row mt-2"
-          :class="{'zlc-tag__checked': tag.checked}"
+          :class="{ 'zlc-tag__checked': tag.checked }"
           :title="tag.label"
-          :sm="6" :md="4" :lg="2"  
+          :sm="6" :md="4" :lg="2"
           @click.stop="handleSelect(tag)"
         >
           <span class="flex justify-center ">{{ tag.label }}</span>
@@ -31,52 +31,53 @@
   </div>
 </template>
 
-<script >
+<script>
 import { cloneDeep } from 'lodash'
 
 export default {
   filters: {
     filterTitle(str) {
-      if (!str) {
+      if (!str)
         return '--'
-      } else if (str.length > 6) {
-        return str.slice(0, 2) + '...' + str.slice(-3)
-      } else {
+
+      else if (str.length > 6)
+        return `${str.slice(0, 2)}...${str.slice(-3)}`
+
+      else
         return str
-      }
-    }
+    },
   },
   props: {
     conditionData: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     default: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     multiple: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       defaultOption: {},
       tagList: [],
       modelValue: [],
-      changeValue: []
+      changeValue: [],
     }
   },
   computed: {
     query() {
       return this.$route.query
-    }
+    },
   },
   watch: {
-    '$route.params'() {
+    '$route.params': function () {
       this.init()
-    }
+    },
   },
   created() {
     this.defaultOption = cloneDeep(this.default)
@@ -92,13 +93,14 @@ export default {
         if (queryValue) {
           selectedValue = queryValue.split(',')
           this.defaultOption.checked = false
-          this.tagList = tags.map(v => {
-            v.checked = selectedValue.some(u => u === v.value)
+          this.tagList = tags.map((v) => {
+            v.checked = selectedValue.includes(v.value)
             return v
           })
-        } else {
+        }
+        else {
           this.defaultOption.checked = true
-          this.tagList = tags.map(v => {
+          this.tagList = tags.map((v) => {
             v.checked = false
             return v
           })
@@ -109,13 +111,14 @@ export default {
         if (queryValue) {
           selectedValue = queryValue
           this.defaultOption.checked = false
-          this.tagList = tags.map(v => {
+          this.tagList = tags.map((v) => {
             v.checked = v.value === selectedValue
             return v
           })
-        } else {
+        }
+        else {
           this.defaultOption.checked = true
-          this.tagList = tags.map(v => {
+          this.tagList = tags.map((v) => {
             v.checked = false
             return v
           })
@@ -126,7 +129,7 @@ export default {
     handleSelectDefault() {
       if (!this.defaultOption.checked) {
         this.defaultOption.checked = true
-        this.tagList = this.tagList.map(u => {
+        this.tagList = this.tagList.map((u) => {
           u.checked = false
           return u
         })
@@ -138,8 +141,9 @@ export default {
       if (this.multiple) {
         tag.checked = !tag.checked
         this.updateValue()
-      } else if (!tag.checked) {
-        this.tagList = this.tagList.map(u => {
+      }
+      else if (!tag.checked) {
+        this.tagList = this.tagList.map((u) => {
           u.checked = u.value === tag.value
           return u
         })
@@ -148,32 +152,33 @@ export default {
     },
 
     updateValue() {
-      const _checked = this.tagList.filter(v => {
+      const _checked = this.tagList.filter((v) => {
         return !!v.checked
       })
-      
+
       this.modelValue = _checked.map(v => v.value)
-      this.changeValue = _checked.map(v => {
+      this.changeValue = _checked.map((v) => {
         return {
           label: v.label,
-          value: v.value
+          value: v.value,
         }
       })
-      
+
       this.defaultOption.checked = this.modelValue.length === 0
       this.$router.push({
         query: {
           ...this.query,
-          [this.conditionData.name]: this.modelValue.length === 0 ? undefined : this.modelValue.join(',')
-        }
+          [this.conditionData.name]: this.modelValue.length === 0 ? undefined : this.modelValue.join(','),
+        },
       }).catch(() => {})
       // this.$emit('input', this.modelValue)
       // this.$emit('change', this.modelValue)
       this.$emit('change')
-    }
-  }
+    },
+  },
 }
 </script>
+
 <style lang="scss" scoped>
 .select-tags {
   display: flex;
@@ -181,7 +186,7 @@ export default {
   position: relative;
   padding: 8px 0;
   .title{
-    width: 100px; 
+    min-width: 100px;
     font-weight: 600;
     color: #999;
   }
@@ -202,7 +207,6 @@ export default {
     }
   }
 }
-
 </style>
 
 <!-- <style lang="stylus" scoped>

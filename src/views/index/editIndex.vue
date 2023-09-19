@@ -50,15 +50,16 @@
           </template>
         </Dialog>
         <div class="saveBtn-box">
-          <!-- <el-button plain :icon="CloseBold" @click="exitEdit">
+          <el-button plain :icon="CloseBold" @click="exitEdit">
             退出编辑
-          </el-button> -->
+          </el-button>
           <el-button plain :icon="Select" @click="saveLayoutData">
             保存
           </el-button>
         </div>
       </div>
     </div>
+    <!-- {{ layout }} -->
     <!-- 自定义布局项 -->
     <grid-layout
       v-model:layout="layout"
@@ -107,46 +108,58 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { onMounted, ref } from 'vue'
 import {
   Grid,
   Plus,
   Select,
 } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import { initPanelsLayout } from './js/layout'
 import Dialog from '@/components/Dialog'
 import MyTasks from '@/views/index/src/MyTasks.vue'
 import MyData from '@/views/index/src/MyData.vue'
 import MyModel from '@/views/index/src/MyModel.vue'
 import ModelRun from '@/views/index/src/ModelRun.vue'
 
-import useLayoutStore from '@/store/modules/layout'
+import { getPageInfo, postPageInfo } from '@/api/index/systemPage.js'
 
 const router = useRouter()
 
-const layoutStore = useLayoutStore()
 const layout = ref([])
 const panelOptions = ref([])
 const checkPanelItem = ref([])
+const panels = ref([])
 const checkAll = ref(false)
 const isIndeterminate = ref(true)
-for (const attr in initPanelsLayout)
-  panelOptions.value.push(initPanelsLayout[attr].name)
 
-const panels = ref(panelOptions)
+onMounted(() => {
+  getPageInfo().then((res) => {
+    const { code, data, msg } = res
+    if (code === 200) {
+      layout.value = data.pageInfos
 
-layout.value = layoutStore.getLayout()
-if (layout.value === null) {
-  checkPanelItem.value = panelOptions
-  layout.value = initPanelsLayout
-}
-else {
-  layout.value = layout.value
-  for (const attr in layout.value)
-    checkPanelItem.value[attr] = layout.value[attr].name
-}
+      for (const attr in data.pageInfos) {
+        panelOptions.value.push(data.pageInfos[attr].name)
+        panels.value = panelOptions.value
+      }
+
+      if (layout.value === null) {
+        checkPanelItem.value = panelOptions.value
+      }
+      else {
+        layout.value = layout.value
+        for (const attr in layout.value)
+          checkPanelItem.value[attr] = layout.value[attr].name
+      }
+    }
+    else {
+      ElMessage({
+        message: msg,
+        type: 'error',
+      })
+    }
+  })
+})
 
 // 退出编辑
 function exitEdit() {
@@ -154,20 +167,23 @@ function exitEdit() {
 }
 // 保存最新面板布局参数
 function saveLayoutData() {
-  layoutStore.setLayout(layout.value)
-  if (layoutStore.getLayout()) {
-    ElMessage({
-      message: '保存成功',
-      type: 'success',
-    })
-  }
-  else {
-    ElMessage({
-      message: '保存失败',
-      type: 'error',
-    })
-  }
-  router.push('/index')
+  postPageInfo(layout.value).then((res) => {
+    console.log('Post', layout.value)
+    const { code, msg } = res
+    if (code === 200) {
+      ElMessage({
+        message: '保存成功',
+        type: 'success',
+      })
+      router.push('/index')
+    }
+    else {
+      ElMessage({
+        message: msg,
+        type: 'error',
+      })
+    }
+  })
 }
 // 全选面板选项
 function handleCheckAllChange(val) {
@@ -230,7 +246,6 @@ function resetPanel() {
 function deletePanelItem(panelId) {
   const deleteName = []
   layout.value = Array.from(layout.value)
-  // console.log(this.initLayout)
   for (const attr in layout) {
     if (layout.value[attr].i === panelId) {
       deleteName.push(layout[attr].name)

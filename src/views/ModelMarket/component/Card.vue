@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 19:29:18
  * @LastEditors: wanglu
- * @LastEditTime: 2023-07-25 10:23:24
+ * @LastEditTime: 2023-09-19 14:33:24
  * @Description:
 -->
 <template>
@@ -60,22 +60,22 @@
         <el-tooltip
           class="box-item"
           effect="light"
-          content="上架时间"
+          content="添加购物车"
           placement="top"
         >
-          <el-icon class="box-card__operator--iconNum-icon">
-            <Clock />
-          </el-icon>
+          <i class="iconfont icon-maijiagouwuche color-blue font-size-3" style="transform: scale(1.5);" @click="addShopping" />
         </el-tooltip>
-        <div class="box-card__operator--iconNum-num">
+        <!-- <div v class="box-card__operator--iconNum-num">
           {{ card.publishDate }}
-        </div>
+        </div> -->
       </div>
     </div>
   </el-card>
 </template>
 
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus'
+
 interface CardItem {
   id: number
   productImg: string
@@ -93,6 +93,12 @@ interface CardItem {
 const props = defineProps<{
   card: CardItem
 }>()
+function addShopping() {
+  ElMessage({
+    message: '购物车添加成功',
+    type: 'success',
+  })
+}
 
 // const prefix = computed(() => {
 //   // return `${import.meta.env.MODE === 'development' ? import.meta.env.VITE_APP_API_BASE_URL : (window as any).config.VITE_APP_API_BASE_URL}/ocp/users/downloadAvatar?fileName=`
@@ -166,7 +172,8 @@ const props = defineProps<{
     }
     &--iconNum-icon{
       width: 16px;
-      height: 16px
+      height: 16px;
+      cursor: pointer;
     }
     &--iconNum-num{
       margin-left: 4px;

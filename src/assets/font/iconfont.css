@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4177670 */
-  src: url('iconfont.woff2?t=1694678837338') format('woff2'),
-       url('iconfont.woff?t=1694678837338') format('woff'),
-       url('iconfont.ttf?t=1694678837338') format('truetype');
+  src: url('iconfont.woff2?t=1695089465280') format('woff2'),
+       url('iconfont.woff?t=1695089465280') format('woff'),
+       url('iconfont.ttf?t=1695089465280') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-maijiagouwuche:before {
+  content: "\e992";
 }
 
 .icon-biaoshimoxing:before {

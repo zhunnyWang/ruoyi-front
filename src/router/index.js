@@ -85,6 +85,19 @@ export const constantRoutes = [
     ],
   },
   {
+    path: '/ModelMarket/list',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/ModelMarket/list',
+        component: () => import('@/views/ModelMarket/list/index.vue'),
+        name: 'list',
+        meta: { title: '购物车详情', activeMenu: '/ModelMarket' },
+      },
+    ],
+  },
+  {
     path: '/user',
     component: Layout,
     hidden: true,

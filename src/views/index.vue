@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 18:58:26
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-14 17:39:48
+ * @LastEditTime: 2023-09-18 15:18:14
  * @Description:
 -->
 <template>
@@ -52,27 +52,26 @@
 </template>
 
 <script setup name="Index">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { useRouter } from 'vue-router'
 import {
   Setting,
 } from '@element-plus/icons-vue'
-import { initPanelsLayout } from './index/js/layout'
 import MyTasks from '@/views/index/src/MyTasks.vue'
 import MyData from '@/views/index/src/MyData.vue'
 import MyModel from '@/views/index/src/MyModel.vue'
 import ModelRun from '@/views/index/src/ModelRun.vue'
-
-import useLayoutStore from '@/store/modules/layout'
+import { getPageInfo } from '@/api/index/systemPage.js'
 
 const layout = ref([])
-layout.value = initPanelsLayout
-const layoutStore = useLayoutStore()
 const router = useRouter()
 
-// 初始化面板项
-layout.value = layoutStore.getLayout()
+onMounted(() => {
+  getPageInfo().then((res) => {
+    layout.value = res.data.pageInfos
+  })
+})
 
 function editDesktop() {
   router.push('/index/editIndex')
