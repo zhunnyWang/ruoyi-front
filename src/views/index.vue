@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 18:58:26
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-18 15:18:14
+ * @LastEditTime: 2023-09-20 16:57:56
  * @Description:
 -->
 <template>
@@ -46,33 +46,57 @@
           v-if="item.name === '我的模型运行任务'"
           :panel-set-icon="true"
         />
+
+        <OutPut
+          v-if="item.name === '产生量'"
+          :panel-set-icon="true"
+        />
+        <ModelRank
+          v-if="item.name === '所有模型排名'"
+          :panel-set-icon="true"
+        />
+        <notice
+          v-if="item.name === '消息通知'"
+          :panel-set-icon="true"
+        />
       </grid-item>
     </grid-layout>
   </div>
 </template>
 
 <script setup name="Index">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   Setting,
 } from '@element-plus/icons-vue'
+
 import MyTasks from '@/views/index/src/MyTasks.vue'
+import notice from '@/views/index/src/notice.vue'
 import MyData from '@/views/index/src/MyData.vue'
 import MyModel from '@/views/index/src/MyModel.vue'
 import ModelRun from '@/views/index/src/ModelRun.vue'
+import OutPut from '@/views/index/src/output.vue'
+import ModelRank from '@/views/index/src/ModelRank.vue'
+
 import { getPageInfo } from '@/api/index/systemPage.js'
 
 const layout = ref([])
 const router = useRouter()
+const route = useRoute()
 
 onMounted(() => {
+  pageInfoInit()
+})
+watch(route, (to, from) => {
+  router.go(0)
+})
+function pageInfoInit() {
   getPageInfo().then((res) => {
     layout.value = res.data.pageInfos
   })
-})
-
+}
 function editDesktop() {
   router.push('/index/editIndex')
 }

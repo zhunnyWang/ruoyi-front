@@ -5,7 +5,7 @@
       <div class="addPanel-container">
         <div class="panel-text-box flex items-center">
           <el-icon><Grid /> </el-icon>
-          <span class="pl-1">面板 / {{ layout.length }}</span>
+          <span class="pl-1">面板 / {{ layout.list.length }}</span>
         </div>
         <el-divider direction="vertical" />
         <Dialog title="选择面板">
@@ -59,10 +59,9 @@
         </div>
       </div>
     </div>
-    <!-- {{ layout }} -->
     <!-- 自定义布局项 -->
     <grid-layout
-      v-model:layout="layout"
+      v-model:layout="layout.list"
       :col-num="24"
       :row-height="30"
       :is-draggable="true"
@@ -73,7 +72,7 @@
       :use-css-transforms="true"
     >
       <grid-item
-        v-for="item in layout"
+        v-for="item in layout.list"
         :key="item.i"
         :x="item.x"
         :y="item.y"
@@ -102,6 +101,21 @@
           :id="item.i"
           @deletePanelItemEvent="deletePanelItem"
         />
+        <OutPut
+          v-if="item.name === '产生量'"
+          :id="item.i"
+          @deletePanelItemEvent="deletePanelItem"
+        />
+        <ModelRank
+          v-if="item.name === '所有模型排名'"
+          :id="item.i"
+          @deletePanelItemEvent="deletePanelItem"
+        />
+        <notice
+          v-if="item.name === '消息通知'"
+          :id="item.i"
+          @deletePanelItemEvent="deletePanelItem"
+        />
       </grid-item>
     </grid-layout>
   </div>
@@ -114,18 +128,25 @@ import {
   Plus,
   Select,
 } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import Dialog from '@/components/Dialog'
 import MyTasks from '@/views/index/src/MyTasks.vue'
+import notice from '@/views/index/src/notice.vue'
 import MyData from '@/views/index/src/MyData.vue'
 import MyModel from '@/views/index/src/MyModel.vue'
 import ModelRun from '@/views/index/src/ModelRun.vue'
+import OutPut from '@/views/index/src/output.vue'
+import ModelRank from '@/views/index/src/ModelRank.vue'
 
 import { getPageInfo, postPageInfo } from '@/api/index/systemPage.js'
 
 const router = useRouter()
 
-const layout = ref([])
+const layout = reactive({
+  id: 0,
+  list: [],
+})
 const panelOptions = ref([])
 const checkPanelItem = ref([])
 const panels = ref([])
@@ -136,20 +157,20 @@ onMounted(() => {
   getPageInfo().then((res) => {
     const { code, data, msg } = res
     if (code === 200) {
-      layout.value = data.pageInfos
-
+      layout.list = data.pageInfos
+      layout.id = data.id
       for (const attr in data.pageInfos) {
         panelOptions.value.push(data.pageInfos[attr].name)
         panels.value = panelOptions.value
       }
 
-      if (layout.value === null) {
+      if (layout.list === null) {
         checkPanelItem.value = panelOptions.value
       }
       else {
-        layout.value = layout.value
-        for (const attr in layout.value)
-          checkPanelItem.value[attr] = layout.value[attr].name
+        layout.list = layout.list
+        for (const attr in layout.list)
+          checkPanelItem.value[attr] = layout.list[attr].name
       }
     }
     else {
@@ -167,15 +188,25 @@ function exitEdit() {
 }
 // 保存最新面板布局参数
 function saveLayoutData() {
-  postPageInfo(layout.value).then((res) => {
-    console.log('Post', layout.value)
+  const sendData = {
+    id: layout.id,
+    pageInfos: layout.list,
+  }
+  postPageInfo(sendData).then((res) => {
     const { code, msg } = res
     if (code === 200) {
       ElMessage({
         message: '保存成功',
         type: 'success',
       })
-      router.push('/index')
+      setTimeout(() => {
+        router.push({
+          path: '/index',
+          query: {
+            date: new Date().getTime(),
+          },
+        })
+      }, 500)
     }
     else {
       ElMessage({

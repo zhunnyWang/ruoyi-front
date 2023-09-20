@@ -2,11 +2,11 @@
  * @Author: wanglu
  * @Date: 2023-09-12 14:22:14
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-14 17:37:46
+ * @LastEditTime: 2023-09-20 11:20:35
  * @Description:
 -->
 <template>
-  <div ref="chartDom" class="echart" />
+  <div ref="chartDom" :style="{ width, height }" />
 </template>
 
 <script setup>
@@ -17,6 +17,14 @@ const props = defineProps({
   options: {
     type: Object,
     required: true,
+  },
+  width: {
+    type: String,
+    default: '300px',
+  },
+  height: {
+    type: String,
+    default: '300px',
   },
 })
 const optionswl = reactive({

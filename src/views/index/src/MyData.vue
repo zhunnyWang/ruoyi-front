@@ -1,100 +1,82 @@
+<!--
+ * @Author: wanglu
+ * @Date: 2023-09-14 10:57:49
+ * @LastEditors: wanglu
+ * @LastEditTime: 2023-09-20 10:34:06
+ * @Description:
+-->
 <template>
   <el-card>
     <template #header>
-      <span class="font-800">我的数据</span>
-      <i
-        v-show="!isPanelSetIcon"
-        class="el-icon-close"
-        style="float: right; padding: 3px 0"
-      />
+      <div class="flex justify-between">
+        <span class="font-800">我的数据</span>
+        <el-button-group>
+          <el-button plain>
+            使用中
+          </el-button>
+          <el-button plain>
+            已过期
+          </el-button>
+        </el-button-group>
+      </div>
     </template>
-    <i
-      v-show="!isPanelSetIcon"
-      class="el-icon-close document-close-icon"
-      @click="deletePanelItem"
-    />
-    <i
-      v-show="isPanelSetIcon"
-      class="iconfont icon-caret-right document-close-icon"
-    />
-    <!-- 标签栏 -->
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="我的数据" name="first">
-        <div class="document-list-box">
-          <div class="document-list-item">
-            <span>405001</span>
-            <i class="iconfont icon-bell-fill" />
-            <span>收文-关于国庆节假期规定</span>
-            <span class="level-item">普通</span>
-            <span>当前步骤：部门会签</span>
-            <span class="name-item">王小明</span>
-            <span class="time-item">2020-09-10 09:51</span>
-          </div>
-          <div class="document-list-item">
-            <span>405001</span>
-            <i class="iconfont icon-bell-fill" />
-            <span>收文-关于国庆节假期规定</span>
-            <span class="level-item">普通</span>
-            <span>当前步骤：部门会签</span>
-            <span class="name-item">王小明</span>
-            <span>2020-09-10 09:51</span>
-          </div>
-          <div class="document-list-item">
-            <span>405001</span>
-            <i class="iconfont icon-bell-fill" />
-            <span>收文-关于国庆节假期规定</span>
-            <span class="level-item">普通</span>
-            <span>当前步骤：部门会签</span>
-            <span class="name-item">王小明</span>
-            <span>2020-09-10 09:51</span>
-          </div>
-          <div class="document-list-item">
-            <span>405001</span>
-            <i class="iconfont icon-bell-fill" />
-            <span>收文-关于国庆节假期规定</span>
-            <span class="level-item">普通</span>
-            <span>当前步骤：部门会签</span>
-            <span class="name-item">王小明</span>
-            <span>2020-09-10 09:51</span>
-          </div>
-          <div class="document-list-item">
-            <span>405001</span>
-            <i class="iconfont icon-bell-fill" />
-            <span>收文-关于国庆节假期规定</span>
-            <span class="level-item">普通</span>
-            <span>当前步骤：部门会签</span>
-            <span class="name-item">王小明</span>
-            <span>2020-09-10 09:51</span>
-          </div>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="待签阅公文" name="second">
-        配置管理
-      </el-tab-pane>
-    </el-tabs>
+    <el-table :data="dataSource">
+      <el-table-column label="排名" type="index" width="50" />
+      <el-table-column label="模型名称" show-overflow-tooltip prop="name" align="center" />
+      <el-table-column label="剩余时间" prop="remainingTime" align="center">
+        <template #default="scope">
+          <span :style="scope.row.remainingTime > 10 ? '' : 'color:red'">{{ scope.row.remainingTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="申请" align="center">
+        <template #default="scope">
+          <el-button link type="primary">
+            申请
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </el-card>
 </template>
 
-<script>
-export default {
-  props: ['id', 'panelSetIcon'],
-  data() {
-    return {
-      activeName: 'first',
-      panelId: this.id,
-      isPanelSetIcon: this.panelSetIcon,
-    }
-  },
-  methods: {
-    handleClick(tab, event) {
-      console.log(tab, event)
-    },
-    // 删除面板项
-    deletePanelItem() {
-      this.$emit('deletePanelItemEvent', this.panelId)
-    },
-  },
-}
+<script setup>
+import useTable from '@/composables/useTable'
+
+// table相关
+const { dataSource, handleChange, pagination } = useTable((params) => {
+  return Promise.resolve({
+    rows: [
+      {
+        id: 1,
+        name: '法院民事案件立案信息',
+        remainingTime: 7,
+      },
+      {
+        id: 2,
+        name: '公安机关诈骗罪立案数据',
+        remainingTime: 7,
+      },
+      {
+        id: 3,
+        name: '市场监督管理部门知识产权处罚数据',
+        remainingTime: 16,
+      },
+      {
+        id: 4,
+        name: '税务部门企业缴纳所得税数据',
+        remainingTime: 78,
+      },
+      {
+        id: 5,
+        name: '市场监督管理部门企业工商登记信息数据',
+        remainingTime: 65,
+      },
+    ],
+    total: 2,
+  })
+})
+
+handleChange(pagination, { test: 1 })
 </script>
 
 <style>
