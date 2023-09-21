@@ -11,15 +11,15 @@ export function listAudit(query) {
   return request({
     url: '/system/audit/list',
     method: 'get',
-    params: query
+    params: query,
   })
 }
 
 // 查询审批详细
 export function getAudit(id) {
   return request({
-    url: '/system/audit/' + id,
-    method: 'get'
+    url: `/system/audit/${id}`,
+    method: 'get',
   })
 }
 
@@ -28,7 +28,7 @@ export function addAudit(data) {
   return request({
     url: '/system/audit',
     method: 'post',
-    data: data
+    data,
   })
 }
 
@@ -37,14 +37,14 @@ export function updateAudit(data) {
   return request({
     url: '/system/audit',
     method: 'put',
-    data: data
+    data,
   })
 }
 
 // 删除审批
 export function delAudit(id) {
   return request({
-    url: '/system/audit/' + id,
-    method: 'delete'
+    url: `/system/audit/${id}`,
+    method: 'delete',
   })
 }

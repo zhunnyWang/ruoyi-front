@@ -2,11 +2,11 @@
  * @Author: wanglu
  * @Date: 2023-09-20 13:40:55
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-20 15:19:56
+ * @LastEditTime: 2023-09-21 09:24:43
  * @Description:
 -->
 <template>
-  <el-card>
+  <el-card class="notice">
     <template #header>
       <div class="flex justify-between items-center">
         <span class="font-800">消息通知</span>
@@ -62,7 +62,11 @@ onMounted(() => {
 })
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
+.notice{
+  overflow-y: auto;
+
+}
 .noticeBox{
   width: 100%;
   .noticeItem{
