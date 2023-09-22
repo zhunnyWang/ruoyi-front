@@ -2,19 +2,28 @@
  * @Author: wanglu
  * @Date: 2023-09-14 13:56:18
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-14 16:22:47
+ * @LastEditTime: 2023-09-22 14:50:28
  * @Description:
 -->
 <template>
   <el-card>
     <template #header>
-      <span class="font-800">我的模型</span>
-      <i
-        v-show="!isPanelSetIcon"
-        class="el-icon-close"
-        style="float: right; padding: 3px 0"
-        @click="deletePanelItem"
-      />
+      <div class="flex justify-between">
+        <span class="font-800">我的模型</span>
+        <div class="flex items-center">
+          <el-button-group>
+            <el-button plain>
+              测试中
+            </el-button>
+            <el-button plain>
+              使用中
+            </el-button>
+          </el-button-group>
+          <el-icon v-show="!isPanelSetIcon" class="ml-4 cursor-pointer" @click="deletePanelItem">
+            <Close />
+          </el-icon>
+        </div>
+      </div>
     </template>
     <el-row gutter="5">
       <el-col v-for="(item, index) in modelDta" :key="index" :span="12" class="pt-2">
@@ -25,8 +34,21 @@
 </template>
 
 <script setup>
+import { Close } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 import modelCard from '@/views/index/components/modelCard.vue'
 
+const props = defineProps({
+  isPanelSetIcon: {
+    type: Boolean,
+  },
+})
+function deletePanelItem() {
+  ElMessage({
+    message: '删除成功',
+    type: 'success',
+  })
+}
 const modelDta = [
   {
     image: '',

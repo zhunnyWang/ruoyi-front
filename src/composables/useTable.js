@@ -18,7 +18,7 @@ export default function useTable(factoryFetch, options) {
   const fetchData = () => {
     loading.value = true
     const params = {
-      page: current.value,
+      pageNum: current.value,
       pageSize: pageSize.value,
       ...filtersObj.value,
     }
@@ -32,6 +32,7 @@ export default function useTable(factoryFetch, options) {
   }
 
   const handleChange = (pagination, filters) => {
+    console.log(filters)
     current.value = pagination.current
     pageSize.value = pagination.pageSize
     filtersObj.value = filters

@@ -2,24 +2,32 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-15 16:59:19
+ * @LastEditTime: 2023-09-22 15:46:07
  * @Description:
 -->
 <template>
   <layout-h class="p-2">
     <layout-h-item class="w-16rem">
-      <p class="data-title color-white my-0 text-center py-2 font-medium">
-        数据中心
-      </p>
-      <FileTree v-loading="dataCenterLoading" :data="dataCenter" @node-click="handleNodeClick" />
-      <p class="data-title color-white my-0 text-center py-2 font-medium">
-        共享数据
-      </p>
-      <FileTree v-loading="dataChangeLoading" :data="dataChange" />
-      <p class="data-title color-white my-2 text-center py-2 font-medium">
-        个人数据
-      </p>
-      <FileTree v-loading="dataPersonalLoading" :data="dataPersonal" />
+      <el-collapse v-model="activeNames">
+        <el-collapse-item title="数据中心" name="1">
+          <FileTree v-loading="dataCenterLoading" :data="dataCenter" />
+        </el-collapse-item>
+        <el-collapse-item title="共享数据" name="2">
+          <FileTree v-loading="dataChangeLoading" :data="dataChange" />
+        </el-collapse-item>
+        <el-collapse-item title="个人数据" name="3">
+          <FileTree
+            ref="personalTree" v-loading="dataPersonalLoading" node-key="id" lazy :load="loadDataPersonal"
+            :expand-on-click-node="false" @node-click="handleNodeClick"
+          >
+            <template #default="{ node, data }">
+              <el-button link type="primary" @click="removePersonal(node, data)">
+                删除
+              </el-button>
+            </template>
+          </FileTree>
+        </el-collapse-item>
+      </el-collapse>
       <Dialog>
         <template #activator="{ on }">
           <el-button text type="primary" icon="Plus" class="w-full my-2" @click="on">
@@ -32,8 +40,11 @@
         </template>
         <template #default>
           <el-form :model="queryParams">
-            <el-form-item label="类别名称" prop="typeName">
-              <el-input v-model="queryParams.typeName" placeholder="请输入类别名称" clearable />
+            <el-form-item label="选择父类" prop="parentId">
+              <el-cascader v-model="queryParams.parentId" :props="categoryProps" class="w-full" collapse-tags />
+            </el-form-item>
+            <el-form-item label="类别名称" prop="categoryName">
+              <el-input v-model="queryParams.categoryName" placeholder="请输入类别名称" clearable />
             </el-form-item>
           </el-form>
         </template>
@@ -41,7 +52,10 @@
           <el-button @click="hide">
             取消
           </el-button>
-          <el-button type="primary" @click="handleAddType">
+          <el-button
+            type="primary" :disabled="!(queryParams.categoryName.length && queryParams.parentId)"
+            :loading="typeLoading" @click="() => handleAddType(hide)"
+          >
             确定
           </el-button>
         </template>
@@ -75,15 +89,29 @@
         </template>
       </Dialog>
     </layout-h-item>
-    <layout-h-item class="data-table">
-      <el-button-group class="mb-4">
-        <el-button type="primary">
+    <layout-h-item class="data-table !block">
+      <el-radio-group v-model="query.dataType" class="mb-4">
+        <el-radio-button label="1">
           测试数据
-        </el-button>
-        <el-button type="primary">
+        </el-radio-button>
+        <el-radio-button label="2">
           正式数据
-        </el-button>
-      </el-button-group>
+        </el-radio-button>
+      </el-radio-group>
+      <Dialog width="1000" append-to-body>
+        <template #activator="{ on }">
+          <el-button link type="primary" icon="Share" @click="on">
+            共享测试
+          </el-button>
+        </template>
+        <template #header>
+          <span>共享设置</span>
+          <el-divider class="mt-2 mb-0" />
+        </template>
+        <template #default>
+          <OrgUserSelect />
+        </template>
+      </Dialog>
       <div class="flex justify-end">
         <Search v-model="inputText" v-model:input-text="query.searchText" class="mb-4 w-300px" />
       </div>
@@ -119,7 +147,10 @@
               <template #default>
                 <el-form :model="shareParams">
                   <el-form-item label="共享范围" prop="shareRange">
-                    <el-cascader v-model="shareParams.shareRange" v-cascader="popupScrollByUser" :props="deptProps" class="w-full" collapse-tags />
+                    <el-cascader
+                      v-model="shareParams.shareRange" v-cascader="popupScrollByUser" :props="deptProps"
+                      class="w-full" collapse-tags
+                    />
                   </el-form-item>
                   <el-form-item label="共享期限" prop="shareTimeRange">
                     <el-input v-model="shareParams.shareTimeRange" clearable />
@@ -141,19 +172,27 @@
 
       <pagination
         v-show="paginationParams.total > 0" v-model:page="paginationParams.current"
-        v-model:limit="paginationParams.pageSize" :total="paginationParams.total" @pagination="paginationChange"
+        v-model:limit="paginationParams.pageSize" :total="paginationParams.total"
       />
     </layout-h-item>
   </layout-h>
 </template>
 
 <script setup>
+import { ElMessage } from 'element-plus'
 import FileTree from './components/FileTree'
 import Upload from './components/Upload'
 import Dialog from '@/components/Dialog'
 import Search from '@/components/Search'
 import useTable from '@/composables/useTable'
+import useButton from '@/composables/useButton'
+import OrgUserSelect from '@/components/OrgUserSelect'
 import { deptTreeSelect, listUser } from '@/api/system/user'
+import { addCatalogy, delCatalogy, listCatalogy } from '@/api/system/catalogy'
+import { listData } from '@/api/system/data'
+
+// 折叠面板
+const activeNames = ref(['1', '2', '3'])
 
 // fileTree相关
 const dataCenterLoading = ref(true)
@@ -164,7 +203,7 @@ const dataChange = ref([])
 const dataPersonal = ref([])
 
 onMounted(async () => {
-  [dataCenter.value, dataChange.value, dataPersonal.value] = await Promise.all([new Promise((res) => {
+  [dataCenter.value, dataChange.value] = await Promise.all([new Promise((res) => {
     setTimeout(() => {
       res(
         [{
@@ -208,36 +247,97 @@ onMounted(async () => {
         ],
       )
     }, 1000)
-  }), new Promise((res) => {
-    setTimeout(() => {
-      res(
-        [{
-          label: '测试数据',
-          children: [
-            {
-              label: '数据1',
-            },
-          ],
-        }],
-      )
-    }, 1000)
-  })])
+  }),
+  ])
   dataCenterLoading.value = false
   dataChangeLoading.value = false
-  dataPersonalLoading.value = false
 })
 
-const handleNodeClick = (data) => {
-  console.log(data)
+const resolvePersonal = ref()
+const nodePersonal = ref([])
+const personalTree = ref()
+
+const loadDataPersonal = (node, resolve) => {
+  if (node.level === 0) {
+    nodePersonal.value = node
+    resolvePersonal.value = resolve
+    dataPersonalLoading.value = true
+    listCatalogy({ parentId: 6 }).then((res) => {
+      resolve(res.rows.map(item => ({ ...item, label: item.categoryName, children: [] })))
+      dataPersonalLoading.value = false
+    })
+  }
+  else {
+    listCatalogy({ parentId: node.data.id }).then((res) => {
+      resolve(res.rows.map(item => (node.level === 1 ? { ...item, label: item.categoryName, children: [] } : { ...item, label: item.categoryName })))
+      if (!res.rows.length) {
+        node.isLeaf = false
+        node.loaded = false
+      }
+    })
+  }
 }
 
 // 新增类别
 const queryParams = ref({
-  typeName: '',
+  parentId: '',
+  categoryName: '',
 })
 
-const handleAddType = () => {
-  console.log(queryParams.value)
+const categoryProps = {
+  value: 'id',
+  lazy: true,
+  checkStrictly: true,
+  lazyLoad: (node, resolve) => {
+    if (node.level === 0) {
+      listCatalogy({ parentId: 0 }).then((res) => {
+        resolve(res.rows.filter(item => item.id === 6).map(item => ({
+          ...item,
+          label: item.categoryName,
+          leaf: false,
+        })))
+      })
+    }
+    else {
+      listCatalogy({ parentId: node.data.id }).then((res) => {
+        resolve(res.rows.map(item => ({
+          ...item,
+          leaf: node.level > 0 && true,
+          label: item.categoryName,
+        })))
+      })
+    }
+  },
+}
+
+const { onClick: handleAddType, typeLoading } = useButton((hide) => {
+  return addCatalogy({
+    categoryName: queryParams.value.categoryName,
+    parentId: queryParams.value.parentId.length === 2 ? queryParams.value.parentId[1] : queryParams.value.parentId[0],
+  }).then((res) => {
+    hide()
+    nodePersonal.value.childNodes = []
+    loadDataPersonal(nodePersonal.value, resolvePersonal.value)
+    ElMessage({
+      message: '新增成功',
+      type: 'success',
+    })
+  })
+})
+
+const removePersonal = (node, data) => {
+  delCatalogy(data.id).then((res) => {
+    nodePersonal.value.childNodes = []
+    loadDataPersonal(nodePersonal.value, resolvePersonal.value)
+    ElMessage({
+      message: '删除成功',
+      type: 'success',
+    })
+  })
+}
+
+const handleNodeClick = () => {
+
 }
 
 // 上传个人数据
@@ -260,31 +360,15 @@ const saveUploadData = (hide) => {
 
 // table相关
 const query = reactive({
-  searchText: '',
+  categoryId: 16,
+  dataType: 1,
 })
 
 const inputText = ref('')
 
 const { loading, dataSource, pagination: paginationParams, handleChange } = useTable((params) => {
-  return Promise.resolve({
-    rows: [
-      {
-        id: '1',
-        name: '诈骗罪案件立案信息',
-        from: '浙江省杭州市公安局',
-        title: '刑事检察',
-        creator: '张明',
-        creatorTime: '2022-05-05',
-        updateTime: '2022-05-05',
-      },
-    ],
-    total: 1,
-  })
+  return listData(params)
 })
-
-const paginationChange = (val) => {
-  handleChange({ ...paginationParams, current: val.page, pageSize: val.limit }, query)
-}
 
 watch(query, (val) => {
   handleChange(paginationParams, {
@@ -351,5 +435,19 @@ onMounted(() => {
 
 .data-table {
   width: calc(100% - 16rem);
+}
+
+::v-deep {
+  .el-tree-node__content:hover {
+    button {
+      display: block;
+    }
+  }
+
+  .el-tree-node__content {
+    button {
+      display: none;
+    }
+  }
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-13 16:45:20
+ * @LastEditTime: 2023-09-22 15:41:23
  * @Description: 申请审批
 -->
 <template>
@@ -56,7 +56,7 @@
 
     <pagination
       v-show="paginationParams.total > 0" v-model:page="paginationParams.current"
-      v-model:limit="paginationParams.pageSize" :total="paginationParams.total" @pagination="paginationChange"
+      v-model:limit="paginationParams.pageSize" :total="paginationParams.total"
     />
   </div>
 </template>
@@ -83,10 +83,6 @@ const refresh = () => {
   paginationParams.current = 1
   query.stepType = '3'
   query.status = '3'
-}
-
-const paginationChange = () => {
-  handleChange({ ...paginationParams, current: val.page, pageSize: val.limit }, query)
 }
 
 watch(query, (val) => {

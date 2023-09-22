@@ -3,31 +3,21 @@
     <section class="title">
       <span :title="conditionData.title">{{ conditionData.title }}</span>
     </section>
-    <section class="content">
-      <!-- 默认选项 -->
-      <el-row v-if="defaultOption.label" class="zlc-tag-wrap">
-        <el-col
-          :sm="6" :md="4" :lg="2"
-          class="zlc-tag flex-row mt-2"
-          :class="{ 'zlc-tag__checked': defaultOption.checked }"
-          @click.stop="handleSelectDefault"
-        >
-          <span class="flex justify-center">{{ defaultOption.label }}</span>
-        </el-col>
-      </el-row>
+    <section :class="`w-full ${arrowDown ? 'h-39px overflow-hidden' : ''}`">
       <!-- 实际选项 -->
-      <el-row v-for="(tag, index) in tagList" :key="index" class="zlc-tag-wrap">
+      <el-row class="zlc-tag-row">
         <el-col
-          class="zlc-tag flex-row mt-2"
-          :class="{ 'zlc-tag__checked': tag.checked }"
-          :title="tag.label"
-          :sm="6" :md="4" :lg="2"
-          @click.stop="handleSelect(tag)"
+          v-for="(tag, index) in [defaultOption, ...tagList]" :key="index" class="zlc-tag mr-2 mb-2"
+          :class="{ 'zlc-tag__checked': tag.checked }" :title="tag.label" :xs="12" :sm="6" :md="4" :lg="2" :xl="1"
+          @click.stop="index === 0 ? handleSelectDefault() : handleSelect(tag)"
         >
           <span class="flex justify-center ">{{ tag.label }}</span>
         </el-col>
       </el-row>
     </section>
+    <el-icon :class="`${arrowDown ? 'rotate-fade-reverse' : 'rotate-fade'} cursor-pointer block`">
+      <ArrowDownBold @click="arrowDown = !arrowDown" />
+    </el-icon>
   </div>
 </template>
 
@@ -50,11 +40,11 @@ export default {
   props: {
     conditionData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     default: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     multiple: {
       type: Boolean,
@@ -67,6 +57,7 @@ export default {
       tagList: [],
       modelValue: [],
       changeValue: [],
+      arrowDown: true,
     }
   },
   computed: {
@@ -170,7 +161,7 @@ export default {
           ...this.query,
           [this.conditionData.name]: this.modelValue.length === 0 ? undefined : this.modelValue.join(','),
         },
-      }).catch(() => {})
+      }).catch(() => { })
       // this.$emit('input', this.modelValue)
       // this.$emit('change', this.modelValue)
       this.$emit('change')
@@ -185,59 +176,34 @@ export default {
   align-items: baseline;
   position: relative;
   padding: 8px 0;
-  .title{
+
+  .title {
     min-width: 100px;
     font-weight: 600;
     color: #999;
   }
-  .zlc-tag-wrap {
-    width: 140px;
-    display: inline-block;
-    .zlc-tag {
-      min-width: 120px;
-      padding: 5px 10px;
-      // border-radius: 10px;
-      background-color:#f1f2f3;
-      cursor: pointer;
-      font-size: 15px;
-      &.zlc-tag__checked {
-        color: #fff;
-        background-color:#7ab9e5 ;
-      }
+
+  .zlc-tag {
+    min-width: 120px;
+    padding: 5px 10px;
+    background-color: #f1f2f3;
+    cursor: pointer;
+    font-size: 15px;
+
+    &.zlc-tag__checked {
+      color: #fff;
+      background-color: #7ab9e5;
     }
   }
+}
+
+.rotate-fade {
+  transform: rotate(180deg);
+  transition: transform .25s linear;
+}
+
+.rotate-fade-reverse {
+  transform: rotate(0deg);
+  transition: transform .25s linear;
 }
 </style>
-
-<!-- <style lang="stylus" scoped>
-@import '../../@styles/_vars.styl'
-
-.select-tags {
-  display flex
-  align-items baseline
-  position relative
-  padding: rem(4) 0
-  .title{
-    width: rem(100)
-    font-weight 600
-    color: #999
-  }
-  .zlc-tag-wrap {
-    width: rem(140)
-    display: inline-block
-    .zlc-tag {
-      max-width fit-content
-      margin: rem(8) rem(16) rem(8) 0
-      padding: rem(2) rem(10)
-      border-radius: rem(20)
-      cursor: pointer
-      font-size: rem(13)
-      &.zlc-tag__checked {
-        color: #fff
-        background-color $primary-theme
-      }
-    }
-  }
-}
-</style> -->
-
