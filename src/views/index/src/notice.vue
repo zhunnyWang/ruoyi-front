@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-09-20 13:40:55
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-21 09:24:43
+ * @LastEditTime: 2023-09-22 14:51:05
  * @Description:
 -->
 <template>
@@ -10,6 +10,9 @@
     <template #header>
       <div class="flex justify-between items-center">
         <span class="font-800">消息通知</span>
+        <el-icon v-show="!isPanelSetIcon" class="ml-4 cursor-pointer" @click="deletePanelItem">
+          <Close />
+        </el-icon>
         <!-- <div class="font-500 color-blue flex items-center  cursor-pointer">
           更多通知<el-icon><DArrowRight /></el-icon>
         </div> -->
@@ -49,11 +52,22 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { listNotice } from '@/api/system/notice.js'
 
 // import Dialog from '@/components/Dialog'
-
+const props = defineProps({
+  isPanelSetIcon: {
+    type: Boolean,
+  },
+})
+function deletePanelItem() {
+  ElMessage({
+    message: '删除成功',
+    type: 'success',
+  })
+}
 const data = ref([])
 onMounted(() => {
   listNotice().then((res) => {

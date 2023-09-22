@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-09-20 10:37:26
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-20 11:39:01
+ * @LastEditTime: 2023-09-22 14:51:48
  * @Description:
 -->
 <template>
@@ -17,6 +17,9 @@
             有效量
           </el-button>
         </el-button-group>
+        <el-icon v-show="!isPanelSetIcon" class="ml-4 cursor-pointer" @click="deletePanelItem">
+          <Close />
+        </el-icon>
       </div>
     </template>
     <div class="flex justify-between items-center">
@@ -55,8 +58,20 @@
 
 <script setup>
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import Echarts from '@/components/Echarts/index.vue'
 
+const props = defineProps({
+  isPanelSetIcon: {
+    type: Boolean,
+  },
+})
+function deletePanelItem() {
+  ElMessage({
+    message: '删除成功',
+    type: 'success',
+  })
+}
 const options = {
   xAxis: {
     // type: 'category',

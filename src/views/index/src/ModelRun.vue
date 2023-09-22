@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-09-14 14:45:27
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-20 10:16:10
+ * @LastEditTime: 2023-09-22 14:49:26
  * @Description:
 -->
 <template>
@@ -10,14 +10,19 @@
     <template #header>
       <div class="flex justify-between">
         <span class="font-800">我的模型运行任务</span>
-        <el-button-group>
-          <el-button plain>
-            已完成
-          </el-button>
-          <el-button plain>
-            运行中
-          </el-button>
-        </el-button-group>
+        <div class="flex items-center">
+          <el-button-group>
+            <el-button plain>
+              已完成
+            </el-button>
+            <el-button plain>
+              运行中
+            </el-button>
+          </el-button-group>
+          <el-icon v-show="!isPanelSetIcon" class="ml-4 cursor-pointer" @click="deletePanelItem">
+            <Close />
+          </el-icon>
+        </div>
       </div>
     </template>
     <el-row gutter="5">
@@ -29,8 +34,21 @@
 </template>
 
 <script setup>
+import { Close } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 import modelRunCard from '@/views/index/components/modelRunCard.vue'
 
+const props = defineProps({
+  isPanelSetIcon: {
+    type: Boolean,
+  },
+})
+function deletePanelItem() {
+  ElMessage({
+    message: '删除成功',
+    type: 'success',
+  })
+}
 const modelDta = [
   {
     image: '',
