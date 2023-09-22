@@ -1,16 +1,28 @@
+<!--
+ * @Author: wanglu
+ * @Date: 2023-09-20 09:06:58
+ * @LastEditors: wanglu
+ * @LastEditTime: 2023-09-22 14:48:20
+ * @Description:
+-->
 <template>
   <el-card>
     <template #header>
-      <div class="flex justify-between">
+      <div class="flex justify-between items-center">
         <span class="font-800">所有模型排名</span>
-        <el-button-group>
-          <el-button plain>
-            执行次数
-          </el-button>
-          <el-button plain>
-            线索数量
-          </el-button>
-        </el-button-group>
+        <div class="flex items-center">
+          <el-button-group>
+            <el-button plain>
+              执行次数
+            </el-button>
+            <el-button plain>
+              线索数量
+            </el-button>
+          </el-button-group>
+          <el-icon v-show="!isPanelSetIcon" class="ml-4 cursor-pointer" @click="deletePanelItem">
+            <Close />
+          </el-icon>
+        </div>
       </div>
     </template>
     <el-table :data="dataSource">
@@ -23,7 +35,22 @@
 </template>
 
 <script setup>
+import { Close } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 import useTable from '@/composables/useTable'
+
+const props = defineProps({
+  isPanelSetIcon: {
+    type: Boolean,
+  },
+})
+
+function deletePanelItem() {
+  ElMessage({
+    message: '删除成功',
+    type: 'success',
+  })
+}
 
 // table相关
 const { dataSource, handleChange, pagination } = useTable((params) => {

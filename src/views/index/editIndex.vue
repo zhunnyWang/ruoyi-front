@@ -5,7 +5,7 @@
       <div class="addPanel-container">
         <div class="panel-text-box flex items-center">
           <el-icon><Grid /> </el-icon>
-          <span class="pl-1">面板 / {{ layout.list.length }}</span>
+          <span class="pl-1">面板 / {{ layout.initList.length }}</span>
         </div>
         <el-divider direction="vertical" />
         <Dialog title="选择面板">
@@ -30,7 +30,7 @@
               <el-checkbox
                 v-for="(item, index) in panels"
                 :key="index"
-                :disabled="item === '个人信息'"
+                :disabled="item === '我的待办'"
                 :label="item"
               >
                 {{ item }}
@@ -44,13 +44,13 @@
             <el-button @click="resetPanel">
               恢复默认设置
             </el-button>
-            <el-button type="primary" @click="getPanelItem">
+            <el-button type="primary" @click="() => getPanelItem(hide)">
               确定
             </el-button>
           </template>
         </Dialog>
         <div class="saveBtn-box">
-          <el-button plain :icon="CloseBold" @click="exitEdit">
+          <el-button plain :icon="Back" @click="exitEdit">
             退出编辑
           </el-button>
           <el-button plain :icon="Select" @click="saveLayoutData">
@@ -61,7 +61,7 @@
     </div>
     <!-- 自定义布局项 -->
     <grid-layout
-      v-model:layout="layout.list"
+      v-model:layout="layout.viewList"
       :col-num="24"
       :row-height="30"
       :is-draggable="true"
@@ -72,7 +72,7 @@
       :use-css-transforms="true"
     >
       <grid-item
-        v-for="item in layout.list"
+        v-for="item in layout.viewList"
         :key="item.i"
         :x="item.x"
         :y="item.y"
@@ -84,6 +84,7 @@
         <MyTasks
           v-if="item.name === '我的待办'"
           :id="item.i"
+          is-panel-set-icon="true"
           @deletePanelItemEvent="deletePanelItem"
         />
         <MyData
@@ -124,6 +125,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import {
+  Back,
   Grid,
   Plus,
   Select,
@@ -144,8 +146,9 @@ import { getPageInfo, postPageInfo } from '@/api/index/systemPage.js'
 const router = useRouter()
 
 const layout = reactive({
-  id: 0,
-  list: [],
+  id: null,
+  viewList: [],
+  initList: [],
 })
 const panelOptions = ref([])
 const checkPanelItem = ref([])
@@ -154,23 +157,23 @@ const checkAll = ref(false)
 const isIndeterminate = ref(true)
 
 onMounted(() => {
+  initPageInfo()
+})
+
+// 初始化数据
+function initPageInfo() {
   getPageInfo().then((res) => {
+    panelOptions.value = []
     const { code, data, msg } = res
     if (code === 200) {
-      layout.list = data.pageInfos
+      layout.initList = data.pageInfos
+      layout.viewList = data.pageInfos.filter(item => item.status === 1)
       layout.id = data.id
-      for (const attr in data.pageInfos) {
-        panelOptions.value.push(data.pageInfos[attr].name)
+      for (const attr in layout.initList) {
+        panelOptions.value.push(layout.initList[attr].name)
         panels.value = panelOptions.value
-      }
-
-      if (layout.list === null) {
-        checkPanelItem.value = panelOptions.value
-      }
-      else {
-        layout.list = layout.list
-        for (const attr in layout.list)
-          checkPanelItem.value[attr] = layout.list[attr].name
+        if (layout.initList[attr].status === 1)
+          checkPanelItem.value[attr] = layout.initList[attr].name
       }
     }
     else {
@@ -180,7 +183,7 @@ onMounted(() => {
       })
     }
   })
-})
+}
 
 // 退出编辑
 function exitEdit() {
@@ -190,7 +193,7 @@ function exitEdit() {
 function saveLayoutData() {
   const sendData = {
     id: layout.id,
-    pageInfos: layout.list,
+    pageInfos: layout.initList,
   }
   postPageInfo(sendData).then((res) => {
     const { code, msg } = res
@@ -216,62 +219,73 @@ function saveLayoutData() {
     }
   })
 }
-// 全选面板选项
+// 全选-面板选项
 function handleCheckAllChange(val) {
-  // this.checkPanelItem = val ? this.panels : ['个人信息']
-  // this.isIndeterminate = false
+  checkPanelItem.value = val ? panels.value : ['我的待办']
+  isIndeterminate.value = false
+  if (val) {
+    for (const attr in layout.initList)
+      layout.initList[attr].status = 1
+  }
+  else {
+    for (const attr in layout.initList) {
+      if (layout.initList[attr].name !== '我的待办')
+        layout.initList[attr].status = 0
+    }
+  }
 }
-// 多选面板选项
+// 多选-面板选项
 function handleCheckedCitiesChange(value) {
-  // const checkedCount = value.length
-  // this.checkAll = checkedCount === this.panels.length
-  // this.isIndeterminate =
-  //   checkedCount > 0 && checkedCount < this.panels.length
+  const checkedCount = value.length
+  isIndeterminate.value = checkedCount > 0 && checkedCount < panels.value.length
+  const noCheckLayout = panels.value.filter(item => !value.includes(item))
+  checkAll.value = checkedCount === panels.value.length
+  if (checkAll.value) {
+    for (const attr in layout.initList)
+      layout.initList[attr].status = 1
+  }
+  else {
+    for (const attr in layout.initList) {
+      value.forEach((i) => {
+        if (layout.initList[attr].name === i)
+          layout.initList[attr].status = 1
+      })
+      noCheckLayout.forEach((i) => {
+        if (layout.initList[attr].name === i)
+          layout.initList[attr].status = 0
+      })
+    }
+  }
 }
-// 添加面板
-function getPanelItem() {
-  // const newLayout = []
-  // const panelName = []
-  // const layout = JSON.parse(window.sessionStorage.getItem('layout'))
-  // if (layout) {
-  //   for (const attr in layout) {
-  //     this.checkPanelItem.filter(item => {
-  //       if (item === layout[attr].name) {
-  //         newLayout.push(layout[attr])
-  //         panelName.push(layout[attr].name)
-  //       }
-  //     })
-  //   }
-  //   const addPanel = this.checkPanelItem
-  //     .concat(panelName)
-  //     .filter((item, i, arr) => {
-  //       return arr.indexOf(item) === arr.lastIndexOf(item)
-  //     })
-  //   for (const attr in this.initLayout) {
-  //     addPanel.filter(item => {
-  //       if (item === this.initLayout[attr].name) {
-  //         newLayout.push(this.initLayout[attr])
-  //       }
-  //     })
-  //   }
-  //   this.layout = newLayout
-  // } else {
-  //   console.log(this.checkPanelItem)
-  //   const result = []
-  //   for (const attr in this.initLayout) {
-  //     result.push(this.initLayout[attr].name)
-  //     this.checkPanelItem.filter((item, index) => {
-  //       if (item === this.initLayout[attr].name) {
-  //         newLayout.push(this.initLayout[attr])
-  //       }
-  //     })
-  //   }
-  //   this.layout = newLayout
-  // }
+// 弹出框确定-添加面板
+function getPanelItem(hide) {
+  const sendData = {
+    id: layout.id,
+    pageInfos: layout.initList,
+  }
+  postPageInfo(sendData).then((res) => {
+    const { code, msg } = res
+    if (code === 200) {
+      ElMessage({
+        message: '面板设置成功',
+        type: 'success',
+      })
+      initPageInfo()
+      hide()
+    }
+    else {
+      ElMessage({
+        message: msg,
+        type: 'error',
+      })
+    }
+  })
 }
 // 恢复默认设置面板
 function resetPanel() {
   checkPanelItem.value = panels.value
+  for (const attr in layout.initList)
+    layout.initList[attr].status = 1
 }
 // 根据面板id删除面板
 function deletePanelItem(panelId) {

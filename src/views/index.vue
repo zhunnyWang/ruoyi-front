@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 18:58:26
  * @LastEditors: wanglu
- * @LastEditTime: 2023-09-20 16:57:56
+ * @LastEditTime: 2023-09-22 14:27:32
  * @Description:
 -->
 <template>
@@ -35,29 +35,29 @@
       >
         <MyTasks
           v-if="item.name === '我的待办'"
-          :panel-set-icon="true"
+          is-panel-set-icon="true"
         />
-        <MyData v-if="item.name === '我的数据'" :panel-set-icon="true" />
+        <MyData v-if="item.name === '我的数据'" is-panel-set-icon="true" />
         <MyModel
           v-if="item.name === '我的模型'"
-          :panel-set-icon="true"
+          is-panel-set-icon="true"
         />
         <ModelRun
           v-if="item.name === '我的模型运行任务'"
-          :panel-set-icon="true"
+          is-panel-set-icon="true"
         />
 
         <OutPut
           v-if="item.name === '产生量'"
-          :panel-set-icon="true"
+          is-panel-set-icon="true"
         />
         <ModelRank
           v-if="item.name === '所有模型排名'"
-          :panel-set-icon="true"
+          is-panel-set-icon="true"
         />
         <notice
           v-if="item.name === '消息通知'"
-          :panel-set-icon="true"
+          is-panel-set-icon="true"
         />
       </grid-item>
     </grid-layout>
@@ -94,7 +94,7 @@ watch(route, (to, from) => {
 })
 function pageInfoInit() {
   getPageInfo().then((res) => {
-    layout.value = res.data.pageInfos
+    layout.value = res.data.pageInfos.filter(item => item.status === 1)
   })
 }
 function editDesktop() {
