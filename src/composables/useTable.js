@@ -1,7 +1,7 @@
 /*
  * @Author: Xueying Wang
  * @Date: 2023-09-08 15:03:39
- * @LastEditors: wanglu
+ * @LastEditors: Xueying Wang
  * @Description:
  */
 import { reactive, ref, watch } from 'vue'
@@ -18,7 +18,7 @@ export default function useTable(factoryFetch, options) {
   const fetchData = () => {
     loading.value = true
     const params = {
-      page: current.value,
+      pageNum: current.value,
       pageSize: pageSize.value,
       ...filtersObj.value,
     }

@@ -39,9 +39,7 @@
     </el-form-item>
     <el-form-item label="文件上传">
       <el-upload
-        v-model:file-list="documentParams.fileList" multiple
-        accept=".csv,.txt,.xls,.xlsx"
-        :limit="5"
+        v-model:file-list="documentParams.fileList" multiple accept=".csv,.txt,.xls,.xlsx" :limit="5"
         :auto-upload="false"
       >
         <el-button type="primary">
@@ -62,6 +60,9 @@
   </el-form>
   <div v-if="active === 1" />
   <el-form v-if="active === 2" :model="saveParams" class="mt-6">
+    <el-form-item label="数据层级" prop="parentId">
+      <el-cascader v-model="saveParams.parentId" :props="categoryProps" class="w-full" collapse-tags />
+    </el-form-item>
     <el-form-item label="数据名称">
       <el-input v-model="saveParams.dataName" placeholder="请输入数据名称" clearable />
     </el-form-item>
@@ -77,6 +78,8 @@
 </template>
 
 <script setup>
+import { listCatalogy } from '@/api/system/catalogy'
+
 const props = defineProps({
   active: {
     type: Number,
@@ -98,10 +101,35 @@ const { proxy } = getCurrentInstance()
 const { business_type } = proxy.useDict('business_type')
 
 const saveParams = ref({
+  parentId: '',
   dataName: '',
   dataSource: '',
   topic: '1',
 })
+
+const categoryProps = {
+  value: 'id',
+  lazy: true,
+  lazyLoad: (node, resolve) => {
+    if (node.level === 0) {
+      listCatalogy({ parentId: 6 }).then((res) => {
+        resolve(res.rows.map(item => ({
+          ...item,
+          label: item.categoryName,
+        })))
+      })
+    }
+    else {
+      listCatalogy({ parentId: node.data.id }).then((res) => {
+        resolve(res.rows.map(item => ({
+          ...item,
+          leaf: node.level > 0 && true,
+          label: item.categoryName,
+        })))
+      })
+    }
+  },
+}
 
 const resetUploadData = () => { }
 

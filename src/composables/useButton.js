@@ -6,12 +6,12 @@
  */
 import { ref } from 'vue'
 
-export function useButton(service) {
+export default function useButton(service) {
   const loading = ref(false)
 
-  const onClick = () => {
+  const onClick = (params) => {
     loading.value = true
-    return service()
+    return service(params)
       .finally(() => {
         loading.value = false
       })
