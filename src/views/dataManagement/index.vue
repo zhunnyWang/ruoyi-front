@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-22 11:09:24
+ * @LastEditTime: 2023-09-22 15:46:07
  * @Description:
 -->
 <template>
@@ -16,7 +16,10 @@
           <FileTree v-loading="dataChangeLoading" :data="dataChange" />
         </el-collapse-item>
         <el-collapse-item title="个人数据" name="3">
-          <FileTree ref="personalTree" v-loading="dataPersonalLoading" node-key="id" lazy :load="loadDataPersonal" :expand-on-click-node="false" @node-click="handleNodeClick">
+          <FileTree
+            ref="personalTree" v-loading="dataPersonalLoading" node-key="id" lazy :load="loadDataPersonal"
+            :expand-on-click-node="false" @node-click="handleNodeClick"
+          >
             <template #default="{ node, data }">
               <el-button link type="primary" @click="removePersonal(node, data)">
                 删除
@@ -86,7 +89,7 @@
         </template>
       </Dialog>
     </layout-h-item>
-    <layout-h-item class="data-table">
+    <layout-h-item class="data-table !block">
       <el-radio-group v-model="query.dataType" class="mb-4">
         <el-radio-button label="1">
           测试数据
@@ -95,6 +98,20 @@
           正式数据
         </el-radio-button>
       </el-radio-group>
+      <Dialog width="1000" append-to-body>
+        <template #activator="{ on }">
+          <el-button link type="primary" icon="Share" @click="on">
+            共享测试
+          </el-button>
+        </template>
+        <template #header>
+          <span>共享设置</span>
+          <el-divider class="mt-2 mb-0" />
+        </template>
+        <template #default>
+          <OrgUserSelect />
+        </template>
+      </Dialog>
       <div class="flex justify-end">
         <Search v-model="inputText" v-model:input-text="query.searchText" class="mb-4 w-300px" />
       </div>
@@ -155,7 +172,7 @@
 
       <pagination
         v-show="paginationParams.total > 0" v-model:page="paginationParams.current"
-        v-model:limit="paginationParams.pageSize" :total="paginationParams.total" @pagination="paginationChange"
+        v-model:limit="paginationParams.pageSize" :total="paginationParams.total"
       />
     </layout-h-item>
   </layout-h>
@@ -169,6 +186,7 @@ import Dialog from '@/components/Dialog'
 import Search from '@/components/Search'
 import useTable from '@/composables/useTable'
 import useButton from '@/composables/useButton'
+import OrgUserSelect from '@/components/OrgUserSelect'
 import { deptTreeSelect, listUser } from '@/api/system/user'
 import { addCatalogy, delCatalogy, listCatalogy } from '@/api/system/catalogy'
 import { listData } from '@/api/system/data'
@@ -240,7 +258,6 @@ const nodePersonal = ref([])
 const personalTree = ref()
 
 const loadDataPersonal = (node, resolve) => {
-  console.log(node)
   if (node.level === 0) {
     nodePersonal.value = node
     resolvePersonal.value = resolve
@@ -352,10 +369,6 @@ const inputText = ref('')
 const { loading, dataSource, pagination: paginationParams, handleChange } = useTable((params) => {
   return listData(params)
 })
-
-const paginationChange = (val) => {
-  handleChange({ ...paginationParams, current: val.page, pageSize: val.limit }, query)
-}
 
 watch(query, (val) => {
   handleChange(paginationParams, {

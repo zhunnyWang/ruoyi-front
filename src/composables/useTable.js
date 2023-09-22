@@ -32,6 +32,7 @@ export default function useTable(factoryFetch, options) {
   }
 
   const handleChange = (pagination, filters) => {
+    console.log(filters)
     current.value = pagination.current
     pageSize.value = pagination.pageSize
     filtersObj.value = filters

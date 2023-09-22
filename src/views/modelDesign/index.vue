@@ -1,8 +1,8 @@
 <!--
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
- * @LastEditors: wanglu
- * @LastEditTime: 2023-09-21 14:48:04
+ * @LastEditors: Xueying Wang
+ * @LastEditTime: 2023-09-22 15:41:30
  * @Description:
 -->
 <template>
@@ -116,7 +116,6 @@
     <pagination
       v-show="paginationParams.total > 0" v-model:page="paginationParams.current"
       v-model:limit="paginationParams.pageSize" :total="paginationParams.total"
-      @pagination="paginationChange"
     />
   </div>
 </template>
@@ -144,10 +143,6 @@ const { loading, dataSource, pagination: paginationParams, handleChange } = useT
 
 const refresh = () => {
   paginationParams.current = 1
-}
-
-const paginationChange = (val) => {
-  handleChange({ ...paginationParams, current: val.page, pageSize: val.limit }, query)
 }
 
 watch(query, (val) => {
