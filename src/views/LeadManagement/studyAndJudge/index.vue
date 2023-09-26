@@ -1,8 +1,8 @@
 <!--
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
- * @LastEditors: Ruixia Lv
- * @LastEditTime: 2023-09-22 16:42:35
+ * @LastEditors: Xueying Wang
+ * @LastEditTime: 2023-09-26 14:45:41
  * @Description: 线索研判
 -->
 <template>
@@ -78,7 +78,7 @@ onMounted(() => {
 })
 
 const judgeLead = () => {
-  router.push('/LeadManagement/studyAndJudge/detail')
+  router.push('/LeadManagement/studyAndJudgeDetail')
 }
 </script>
 

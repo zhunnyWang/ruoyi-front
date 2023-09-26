@@ -111,19 +111,6 @@ export const constantRoutes = [
       },
     ],
   },
-  {
-    path: '/LeadManagement/studyAndJudge/detail',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/LeadManagement/studyAndJudge/detail',
-        component: () => import('@/views/LeadManagement/studyAndJudge/detail/index.vue'),
-        name: 'detail',
-        meta: { title: '线索研判详情', activeMenu: '/LeadManagement/studyAndJudge' },
-      },
-    ],
-  },
 ]
 
 // 动态路由，基于用户权限动态去加载

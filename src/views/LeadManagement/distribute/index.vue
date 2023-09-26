@@ -1,4 +1,4 @@
-<!--
+div<!--
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Ruixia Lv
@@ -50,34 +50,25 @@
                 </el-form-item>
               </el-form>
             </template>
-            <template #footer="{ hide }">
-              <el-button @click="hide">
-                取消
-              </el-button>
-              <el-button type="primary" @click="handleAddType">
-                确定
-              </el-button>
-            </template>
           </Dialog>
-          <Dialog>
+          <Dialog width="1000" append-to-body>
             <template #activator="{ on }">
-              <el-button link type="primary" @click="on">
+              <el-button link type="primary" icon="Share" @click="on">
                 分配
               </el-button>
             </template>
+            <template #header>
+              <span>分配设置</span>
+              <el-divider class="mt-2 mb-0" />
+            </template>
             <template #default>
-              <div class="flex">
-                <FileTree v-loading="regionDataLoading" :data="regionData" class="w-300px border-gray-900 mr-10" @node-click="handleNodeClick" />
-                <el-checkbox-group v-model="checkList">
-                  <el-checkbox v-for="(item, index) in checkData" :key="index" :label="item" />
-                </el-checkbox-group>
-              </div>
+              <OrgUserSelect />
             </template>
             <template #footer="{ hide }">
               <el-button @click="hide">
                 取消
               </el-button>
-              <el-button type="primary" @click="handleAddType">
+              <el-button type="primary" @click="handleAdd">
                 确定
               </el-button>
             </template>
@@ -87,27 +78,23 @@
     </el-table>
     <pagination
       v-show="paginationParams.total > 0" v-model:page="paginationParams.current"
-      v-model:limit="paginationParams.pageSize" :total="paginationParams.total"
-      @pagination="paginationChange"
+      v-model:limit="paginationParams.pageSize" :total="paginationParams.total" @pagination="paginationChange"
     />
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
-import FileTree from '@/views/dataManagement/components/FileTree'
 import useTable from '@/composables/useTable'
 import Search from '@/components/Search'
 import Dialog from '@/components/Dialog'
+import OrgUserSelect from '@/components/OrgUserSelect'
 
 const { proxy } = getCurrentInstance()
 const { distribute_status } = proxy.useDict('distribute_status')
 
 const regionDataLoading = ref(true)
 const regionData = ref([])
-
-const checkList = ref(['全部'])
-const checkData = ref(['全部', '李检察官', '王检察官', '张检察官', '1检察官', '2检察官'])
 
 const inputText = ref('')
 // table相关
@@ -124,53 +111,6 @@ const { loading, dataSource, pagination: paginationParams, handleChange } = useT
       },
     ],
     total: 1,
-  })
-})
-
-onMounted(() => {
-  Promise.resolve([{
-    label: '北京市人民检察院',
-    children: [
-      {
-        label: '北京市朝阳区人民检察院',
-      },
-      {
-        label: '北京市海淀区人民检察院',
-      },
-    ],
-  }, {
-    label: '民事检查部',
-    children: [
-      {
-        label: '民事检查部1',
-      },
-    ],
-  }, {
-    label: '刑事检察部',
-    children: [
-      {
-        label: '刑事检察部1',
-      },
-    ],
-  }, {
-    label: '行政检查部',
-    children: [
-      {
-        label: '行政检查部1',
-      },
-    ],
-  },
-  {
-    label: '公益诉讼',
-    children: [
-      {
-        label: '公益诉讼1',
-      },
-    ],
-  },
-  ]).then((val) => {
-    regionData.value = val
-    regionDataLoading.value = false
   })
 })
 
@@ -192,24 +132,23 @@ onMounted(() => {
   handleChange(paginationParams, query)
 })
 
-const handleNodeClick = (data) => {
-  console.log(data)
-}
+const handleAdd = () => {}
 </script>
 
 <style lang="scss" scoped>
-.el-table{
-  --el-table-border-color:transparent;
+.el-table {
+  --el-table-border-color: transparent;
 }
-.el-checkbox-group{
+
+.el-checkbox-group {
   display: flex;
   flex-direction: column;
 }
 </style>
 
 <style>
- .el-form-item__label{
-    width: 80px !important;
-  }
+.el-form-item__label {
+  width: 80px !important;
+}
 </style>
 
