@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-22 15:46:07
+ * @LastEditTime: 2023-09-27 10:05:45
  * @Description:
 -->
 <template>
@@ -90,15 +90,16 @@
       </Dialog>
     </layout-h-item>
     <layout-h-item class="data-table !block">
-      <el-radio-group v-model="query.dataType" class="mb-4">
-        <el-radio-button label="1">
-          测试数据
-        </el-radio-button>
-        <el-radio-button label="2">
-          正式数据
-        </el-radio-button>
-      </el-radio-group>
-      <Dialog width="1000" append-to-body>
+      <div class="flex justify-between items-center mt-2">
+        <el-radio-group v-model="query.dataType" class="mb-4">
+          <el-radio-button label="1">
+            测试数据
+          </el-radio-button>
+          <el-radio-button label="2">
+            正式数据
+          </el-radio-button>
+        </el-radio-group>
+        <!-- <Dialog width="1000" append-to-body>
         <template #activator="{ on }">
           <el-button link type="primary" icon="Share" @click="on">
             共享测试
@@ -111,8 +112,7 @@
         <template #default>
           <OrgUserSelect />
         </template>
-      </Dialog>
-      <div class="flex justify-end">
+      </Dialog> -->
         <Search v-model="inputText" v-model:input-text="query.searchText" class="mb-4 w-300px" />
       </div>
       <el-table v-loading="loading" :data="dataSource">
@@ -186,7 +186,6 @@ import Dialog from '@/components/Dialog'
 import Search from '@/components/Search'
 import useTable from '@/composables/useTable'
 import useButton from '@/composables/useButton'
-import OrgUserSelect from '@/components/OrgUserSelect'
 import { deptTreeSelect, listUser } from '@/api/system/user'
 import { addCatalogy, delCatalogy, listCatalogy } from '@/api/system/catalogy'
 import { listData } from '@/api/system/data'
@@ -437,17 +436,15 @@ onMounted(() => {
   width: calc(100% - 16rem);
 }
 
-::v-deep {
-  .el-tree-node__content:hover {
-    button {
-      display: block;
-    }
+:deep(.el-tree-node__content:hover) {
+  button {
+    display: block;
   }
+}
 
-  .el-tree-node__content {
-    button {
-      display: none;
-    }
+:deep(.el-tree-node__content) {
+  button {
+    display: none;
   }
 }
 </style>
