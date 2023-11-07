@@ -10,23 +10,23 @@
     <div class="box-card__img pa-1">
       <el-image
         class="box-card__img--image"
-        :src="props.card.productImg ? card.productImg : '/images/no-data.jpg'"
+        :src="`${baseUrl}${card.picture}`"
       />
     </div>
-    <p class="box-card__title py-1">
-      {{ card.title }}
+    <p class="box-card__title py-1" :title="card.name">
+      {{ card.name }}
     </p>
     <div class="box-card__text">
-      <p class="box-card__text--description" :title="card.describe">
-        {{ card.describe }}
+      <p class="box-card__text--description" :title="str">
+        {{ str }}
       </p>
 
       <span class="box-card__text--label p-1">
-        {{ card.label }}
+        {{ card.businessType }}
       </span>
 
       <p class="box-card__text--provider mt-2 mb-1">
-        {{ card.address }}
+        {{ card.address || '北京市丰台区人民检察院' }}
       </p>
     </div>
     <div class="box-card__operator flex justify-between  items-center mt-4">
@@ -74,6 +74,7 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
 interface CardItem {
@@ -89,7 +90,7 @@ interface CardItem {
   subscribeStatus: number
   collectStatus: number
 }
-
+const baseUrl = import.meta.env.VITE_APP_BASE_API
 const props = defineProps<{
   card: CardItem
 }>()
@@ -99,10 +100,11 @@ function addShopping() {
     type: 'success',
   })
 }
+const str = '梳理本院受理的未成年人涉黄类案件发现，未成年人涉黄类案件中大多存在未成年人在宾馆、日租房内进行卖淫嫖娼活动或在KTV内进行有偿陪侍的情形。经审查发现，上述日租房、宾馆均存在未按规定落实未成年人入住询问、登记等制度，KTV等场所也未落实不允许未成年人进入的相关规定，严重侵害了未成年人的合法权益，同时也暴露出相关行政主管机关存在怠于履行监管职责的情形。\n通过筛查全国检察业务应用系统2.0涉黄类案件数据以及北京市公安局丰台分局治安违法案件数据发现宾馆、日租房、酒店等住宿经营者可能存在未落实未成年人入住询问、登记制度问题的违法线索。'
 
-// const prefix = computed(() => {
-//   // return `${import.meta.env.MODE === 'development' ? import.meta.env.VITE_APP_API_BASE_URL : (window as any).config.VITE_APP_API_BASE_URL}/ocp/users/downloadAvatar?fileName=`
-// })
+const introducesData = computed(() => {
+  return props.card.introduces
+})
 </script>
 
 <style lang="scss" scoped>
@@ -111,7 +113,7 @@ function addShopping() {
 
   &__img {
     overflow: hidden;
-    height: 130px;
+    height: 180px;
 
     &--image {
       width: 100%;
@@ -130,8 +132,9 @@ function addShopping() {
     font-weight: 500;
     color: #182859;
     line-height: 27px;
+    overflow: hidden;
     white-space: nowrap;
-    overflow-x: auto;
+    text-overflow: ellipsis;
   }
 
   &__text {

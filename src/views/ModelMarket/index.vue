@@ -49,11 +49,12 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Card from './component/Card.vue'
 import SelectTags from './component/SelectTags.vue'
 import Search from '@/components/Search'
+import { getMarketList } from '@/api/ModelMarket/index.js'
 
 const router = useRouter()
 
@@ -108,60 +109,72 @@ const defaultOption = {
   value: '',
   label: '不限',
 }
-const cardlist = reactive([
-  {
-    id: 1,
-    productImg: '/images/modelMarket-1.png',
-    title: '网约车虚增车费诈骗监督模型',
-    describe: '网约车平台接收投诉多，网约车平台报案，公安立案后通知检察院提前介入，检察院通过法律文书检察院通过法律文书检察院通过法律文书检察院通过法律文书',
-    label: '刑事检察',
-    address: '杭州市人民检察院',
-    subscribeNumber: 2,
-    collectNumber: 3,
-    publishDate: '2023-7-25',
-    subscribeStatus: 1,
-    collectStatus: 0,
-  },
-  {
-    id: 2,
-    productImg: '/images/modelMarket-2.png',
-    title: '网约车虚增车费诈骗监督模型',
-    describe: '网约车平台接收投诉多，网约车平台报案，公安立案后通知检察院提前介入，检察院通过法律文书检察院通过法律文书检察院通过法律文书检察院通过法律文书',
-    label: '刑事检察',
-    address: '杭州市人民检察院',
-    subscribeNumber: 2,
-    collectNumber: 3,
-    publishDate: '2023-7-25',
-    subscribeStatus: 1,
-    collectStatus: 0,
-  },
-  {
-    id: 3,
-    productImg: '/images/modelMarket-3.png',
-    title: '网约车虚增车费诈骗监督模型',
-    describe: '网约车平台接收投诉多，网约车平台报案，公安立案后通知检察院提前介入，检察院通过法律文书检察院通过法律文书检察院通过法律文书检察院通过法律文书',
-    label: '刑事检察',
-    address: '杭州市人民检察院',
-    subscribeNumber: 2,
-    collectNumber: 3,
-    publishDate: '2023-7-25',
-    subscribeStatus: 0,
-    collectStatus: 0,
-  },
-  {
-    id: 4,
-    productImg: '/images/modelMarket-4.png',
-    title: '网约车虚增车费诈骗监督模型',
-    describe: '网约车平台接收投诉多，网约车平台报案，公安立案后通知检察院提前介入，检察院通过法律文书检察院通过法律文书检察院通过法律文书检察院通过法律文书',
-    label: '刑事检察',
-    address: '杭州市人民检察院',
-    subscribeNumber: 2,
-    collectNumber: 3,
-    publishDate: '2023-7-25',
-    subscribeStatus: 1,
-    collectStatus: 1,
-  },
-])
+
+// 获取列表
+onMounted(()=>{
+  getMarketData()
+})
+const cardlist = ref([])
+function getMarketData() {
+  getMarketList().then(res=> {
+    console.log('res', res)
+    cardlist.value = res.rows
+  })
+}
+// const cardlist = reactive([
+//   {
+//     id: 1,
+//     productImg: '/images/modelMarket-1.png',
+//     title: '网约车虚增车费诈骗监督模型',
+//     describe: '网约车平台接收投诉多，网约车平台报案，公安立案后通知检察院提前介入，检察院通过法律文书检察院通过法律文书检察院通过法律文书检察院通过法律文书',
+//     label: '刑事检察',
+//     address: '杭州市人民检察院',
+//     subscribeNumber: 2,
+//     collectNumber: 3,
+//     publishDate: '2023-7-25',
+//     subscribeStatus: 1,
+//     collectStatus: 0,
+//   },
+//   {
+//     id: 2,
+//     productImg: '/images/modelMarket-2.png',
+//     title: '网约车虚增车费诈骗监督模型',
+//     describe: '网约车平台接收投诉多，网约车平台报案，公安立案后通知检察院提前介入，检察院通过法律文书检察院通过法律文书检察院通过法律文书检察院通过法律文书',
+//     label: '刑事检察',
+//     address: '杭州市人民检察院',
+//     subscribeNumber: 2,
+//     collectNumber: 3,
+//     publishDate: '2023-7-25',
+//     subscribeStatus: 1,
+//     collectStatus: 0,
+//   },
+//   {
+//     id: 3,
+//     productImg: '/images/modelMarket-3.png',
+//     title: '网约车虚增车费诈骗监督模型',
+//     describe: '网约车平台接收投诉多，网约车平台报案，公安立案后通知检察院提前介入，检察院通过法律文书检察院通过法律文书检察院通过法律文书检察院通过法律文书',
+//     label: '刑事检察',
+//     address: '杭州市人民检察院',
+//     subscribeNumber: 2,
+//     collectNumber: 3,
+//     publishDate: '2023-7-25',
+//     subscribeStatus: 0,
+//     collectStatus: 0,
+//   },
+//   {
+//     id: 4,
+//     productImg: '/images/modelMarket-4.png',
+//     title: '网约车虚增车费诈骗监督模型',
+//     describe: '网约车平台接收投诉多，网约车平台报案，公安立案后通知检察院提前介入，检察院通过法律文书检察院通过法律文书检察院通过法律文书检察院通过法律文书',
+//     label: '刑事检察',
+//     address: '杭州市人民检察院',
+//     subscribeNumber: 2,
+//     collectNumber: 3,
+//     publishDate: '2023-7-25',
+//     subscribeStatus: 1,
+//     collectStatus: 1,
+//   },
+// ])
 
 function checkOrder(label) {
   currentSortType.value = label
