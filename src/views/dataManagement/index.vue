@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-27 10:05:45
+ * @LastEditTime: 2023-11-07 15:20:46
  * @Description:
 -->
 <template>
@@ -10,15 +10,15 @@
     <layout-h-item class="w-16rem">
       <el-collapse v-model="activeNames">
         <el-collapse-item title="数据中心" name="1">
-          <FileTree v-loading="dataCenterLoading" :data="dataCenter" />
+          <FileTree v-loading="dataCenterLoading" :data="dataCenter" node-key="id" lazy :load="loadDataCenter" @node-click="handleNodeClick" />
         </el-collapse-item>
         <el-collapse-item title="共享数据" name="2">
-          <FileTree v-loading="dataChangeLoading" :data="dataChange" />
+          <FileTree v-loading="dataChangeLoading" :data="dataChange" node-key="id" />
         </el-collapse-item>
         <el-collapse-item title="个人数据" name="3">
           <FileTree
             ref="personalTree" v-loading="dataPersonalLoading" node-key="id" lazy :load="loadDataPersonal"
-            :expand-on-click-node="false" @node-click="handleNodeClick"
+            :expand-on-click-node="false"
           >
             <template #default="{ node, data }">
               <el-button link type="primary" @click="removePersonal(node, data)">
@@ -99,36 +99,22 @@
             正式数据
           </el-radio-button>
         </el-radio-group>
-        <!-- <Dialog width="1000" append-to-body>
-        <template #activator="{ on }">
-          <el-button link type="primary" icon="Share" @click="on">
-            共享测试
-          </el-button>
-        </template>
-        <template #header>
-          <span>共享设置</span>
-          <el-divider class="mt-2 mb-0" />
-        </template>
-        <template #default>
-          <OrgUserSelect />
-        </template>
-      </Dialog> -->
-        <Search v-model="inputText" v-model:input-text="query.searchText" class="mb-4 w-300px" />
+        <Search v-model="inputText" v-model:input-text="query.name" class="mb-4 w-300px" />
       </div>
       <el-table v-loading="loading" :data="dataSource">
         <el-table-column type="index" width="50" />
         <el-table-column label="数据名称" align="center" prop="name" />
-        <el-table-column label="数据来源" align="center" prop="from" />
-        <el-table-column label="主题" align="center" prop="title" />
-        <el-table-column label="创建人" align="center" prop="creator" />
-        <el-table-column label="创建时间" align="center" prop="creatorTime" />
+        <el-table-column label="数据来源" align="center" prop="dataSource" />
+        <el-table-column label="主题" align="center" prop="thematic" />
+        <el-table-column label="创建人" align="center" prop="createBy" />
+        <el-table-column label="创建时间" align="center" prop="createTime" />
         <el-table-column label="更新时间" align="center" prop="updateTime" />
         <el-table-column label="操作" width="300" align="center" class-name="small-padding fixed-width">
           <template #default="scope">
             <el-button link type="primary" icon="View">
               查看
             </el-button>
-            <el-button link type="primary" icon="Edit">
+            <!-- <el-button link type="primary" icon="Edit">
               编辑
             </el-button>
             <el-button link type="primary" icon="Delete">
@@ -165,7 +151,7 @@
                   确定
                 </el-button>
               </template>
-            </Dialog>
+            </Dialog> -->
           </template>
         </el-table-column>
       </el-table>
@@ -199,62 +185,24 @@ const dataChangeLoading = ref(true)
 const dataPersonalLoading = ref(true)
 const dataCenter = ref([])
 const dataChange = ref([])
-const dataPersonal = ref([])
-
-onMounted(async () => {
-  [dataCenter.value, dataChange.value] = await Promise.all([new Promise((res) => {
-    setTimeout(() => {
-      res(
-        [{
-          label: '检察数据',
-          children: [
-            {
-              label: '数据1',
-            },
-          ],
-        }, {
-          label: '政法数据',
-          children: [
-            {
-              label: '数据1',
-            },
-          ],
-        }, {
-          label: '行政执法机关数据',
-          children: [
-            {
-              label: '数据1',
-            },
-          ],
-        }, {
-          label: '社会数据',
-          children: [
-            {
-              label: '数据1',
-            },
-          ],
-        }],
-      )
-    }, 1000)
-  }), new Promise((res) => {
-    setTimeout(() => {
-      res(
-        [
-          {
-            label: '所有共享数据',
-          },
-        ],
-      )
-    }, 1000)
-  }),
-  ])
-  dataCenterLoading.value = false
-  dataChangeLoading.value = false
-})
-
 const resolvePersonal = ref()
 const nodePersonal = ref([])
 const personalTree = ref()
+
+const loadDataCenter = (node, resolve) => {
+  if (node.level === 0) {
+    dataCenterLoading.value = true
+    listCatalogy({ parentId: 7 }).then((res) => {
+      resolve(res.rows.map(item => ({ ...item, label: item.categoryName, children: [] })))
+      dataCenterLoading.value = false
+    })
+  }
+  else {
+    listCatalogy({ parentId: node.data.id }).then((res) => {
+      resolve(res.rows.map(item => (node.level === 1 ? { ...item, label: item.categoryName, children: [] } : { ...item, label: item.categoryName })))
+    })
+  }
+}
 
 const loadDataPersonal = (node, resolve) => {
   if (node.level === 0) {
@@ -335,10 +283,6 @@ const removePersonal = (node, data) => {
   })
 }
 
-const handleNodeClick = () => {
-
-}
-
 // 上传个人数据
 const active = ref(0)
 const upload = ref()
@@ -359,7 +303,6 @@ const saveUploadData = (hide) => {
 
 // table相关
 const query = reactive({
-  categoryId: 16,
   dataType: 1,
 })
 
@@ -374,6 +317,10 @@ watch(query, (val) => {
     ...val,
   })
 })
+
+const handleNodeClick = (node) => {
+  query.categoryId = node.id
+}
 
 // 共享设置
 const shareParams = ref({
@@ -420,8 +367,12 @@ function getDeptTree() {
   })
 }
 
-onMounted(() => {
-  handleChange(paginationParams, query)
+onMounted(async () => {
+  listCatalogy({ parentId: 5 }).then((res) => {
+    dataChangeLoading.value = false
+    return res.rows.map(item => ({ ...item, label: item.categoryName, children: [] }))
+  })
+  query.categoryId = 0
   getDeptTree()
 })
 </script>

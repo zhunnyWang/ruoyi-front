@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-22 15:41:30
+ * @LastEditTime: 2023-11-07 15:37:33
  * @Description:
 -->
 <template>
@@ -21,11 +21,15 @@
       <el-form-item>
         <Search v-model="query.name" class="w-300px" placeholder="输入模型名称" />
 
-        <Dialog title="新建模型设计">
+        <Dialog>
           <template #activator="{ on }">
             <el-button icon="Plus" type="primary" class="ml-5" @click="on">
               新建
             </el-button>
+          </template>
+          <template #header>
+            <span>新建模型设计</span>
+            <el-divider class="mt-2 mb-0" />
           </template>
           <template #default>
             <el-form ref="queryRef" :model="form" label-width="120px">
@@ -137,13 +141,9 @@ const query = reactive({
   supervisionType: '',
   name: '',
 })
-const { loading, dataSource, pagination: paginationParams, handleChange } = useTable((query) => {
+const { loading, dataSource, pagination: paginationParams, handleChange, refresh } = useTable((query) => {
   return getList(query)
 })
-
-const refresh = () => {
-  paginationParams.current = 1
-}
 
 watch(query, (val) => {
   handleChange(paginationParams, {

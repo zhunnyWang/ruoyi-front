@@ -32,7 +32,6 @@ export default function useTable(factoryFetch, options) {
   }
 
   const handleChange = (pagination, filters) => {
-    console.log(filters)
     current.value = pagination.current
     pageSize.value = pagination.pageSize
     filtersObj.value = filters
@@ -64,6 +63,10 @@ export default function useTable(factoryFetch, options) {
     fetchData()
   })
 
+  const refresh = () => {
+    fetchData()
+  }
+
   return {
     pagination: reactive({
       current,
@@ -75,6 +78,7 @@ export default function useTable(factoryFetch, options) {
     fetchData,
     handleChange,
     handleDelete,
+    refresh,
   }
 }
 

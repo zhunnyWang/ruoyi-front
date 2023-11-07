@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-22 15:41:34
+ * @LastEditTime: 2023-11-07 15:37:50
  * @Description:
 -->
 <template>
@@ -68,18 +68,13 @@ const { approve_status } = proxy.useDict('approve_status')
 const { approve_items } = proxy.useDict('approve_items')
 
 // table相关
-const { loading, dataSource, pagination: paginationParams, handleChange } = useTable((params) => {
+const { loading, dataSource, pagination: paginationParams, handleChange, refresh } = useTable((params) => {
   return listPost(params)
 })
 
 const query = reactive({
   status: '3',
 })
-
-const refresh = () => {
-  paginationParams.current = 1
-  query.status = '3'
-}
 
 watch(query, (val) => {
   handleChange(paginationParams, {

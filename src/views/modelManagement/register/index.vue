@@ -2,7 +2,7 @@
  * @Author: wanglu
  * @Date: 2023-07-24 09:34:51
  * @LastEditors: Xueying Wang
- * @LastEditTime: 2023-09-26 11:38:36
+ * @LastEditTime: 2023-11-07 15:49:07
  * @Description: 模型注册
 -->
 <template>
@@ -75,7 +75,7 @@
 import { useRouter } from 'vue-router'
 import useTable from '@/composables/useTable'
 import Search from '@/components/Search'
-import { getList } from '@/api/modelDesign/modelDesign.js'
+import { deleteList, getList } from '@/api/modelDesign/modelDesign.js'
 
 const { proxy } = getCurrentInstance()
 const { business_type } = proxy.useDict('business_type')
@@ -92,7 +92,7 @@ const query = reactive({
   name: '',
 })
 
-const { loading, dataSource, pagination: paginationParams, handleChange } = useTable((query) => {
+const { loading, dataSource, pagination: paginationParams, handleChange, refresh } = useTable((query) => {
   return getList(query)
 })
 
@@ -106,14 +106,26 @@ watch(query, (val) => {
   })
 })
 
-const refresh = () => {
-  paginationParams.current = 1
-  query.businessType = ''
-  query.supervisionType = ''
-  query.name = ''
-}
-
 const judgeAdd = () => {
   router.push('/modelManagement/modelResgisterAdd')
+}
+
+function handleDelete(params) {
+  deleteList(params).then((res) => {
+    const { code, msg } = res
+    if (code === 200) {
+      ElMessage({
+        type: 'success',
+        message: msg,
+      })
+      refresh()
+    }
+    else {
+      ElMessage({
+        type: 'error',
+        message: msg,
+      })
+    }
+  })
 }
 </script>

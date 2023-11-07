@@ -5,7 +5,7 @@
  * @Description: 上传个人数据
 -->
 <template>
-  <el-steps :space="200" :active="active" align-center>
+  <el-steps :active="active" align-center>
     <el-step title="导入文件" />
     <el-step title="校验数据" />
     <el-step title="保存" />
