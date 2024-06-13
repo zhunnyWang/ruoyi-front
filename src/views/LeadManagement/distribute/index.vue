@@ -12,19 +12,19 @@ div<!--
     </div>
 
     <el-table v-loading="loading" :data="dataSource">
-      <el-table-column type="index" width="50" />
+      <el-table-column type="index" width="60" label="序号" />
       <el-table-column label="线索编号" align="center" prop="id" width="100" />
       <el-table-column label="线索名称" align="center" prop="name" />
       <el-table-column label="线索来源" align="center" prop="source" />
       <el-table-column label="产生时间" align="center" prop="creatorTime" />
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column label="状态" align="center" prop="status" width="200">
         <template #default="scope">
           <dict-tag :options="distribute_status" :value="scope.row.status" />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="180" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <Dialog>
+          <Dialog append-to-body>
             <template #activator="{ on }">
               <el-button link type="primary" icon="View" @click="on">
                 查看
@@ -102,15 +102,77 @@ const { loading, dataSource, pagination: paginationParams, handleChange } = useT
   return Promise.resolve({
     rows: [
       {
-        id: '1',
+        id: '15',
         name: '张某某疑似网约车虚增车费诈骗线索',
         source: '网约车虚增车费诈骗监督',
         status: 0,
         creatorTime: '2022-05-05',
-
+      },
+      {
+        id: '16',
+        name: '李某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
+      },
+      {
+        id: '18',
+        name: '孙某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
+      },
+      {
+        id: '22',
+        name: '王某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
+      },
+      {
+        id: '26',
+        name: '张某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
+      },
+      {
+        id: '30',
+        name: '张某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
+      },
+      {
+        id: '35',
+        name: '张某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
+      },
+      {
+        id: '41',
+        name: '张某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
+      },
+      {
+        id: '51',
+        name: '张某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
+      },
+      {
+        id: '60',
+        name: '张某某疑似网约车虚增车费诈骗线索',
+        source: '网约车虚增车费诈骗监督',
+        status: 0,
+        creatorTime: '2022-05-05',
       },
     ],
-    total: 1,
+    total: 10,
   })
 })
 
@@ -136,10 +198,6 @@ const handleAdd = () => {}
 </script>
 
 <style lang="scss" scoped>
-.el-table {
-  --el-table-border-color: transparent;
-}
-
 .el-checkbox-group {
   display: flex;
   flex-direction: column;

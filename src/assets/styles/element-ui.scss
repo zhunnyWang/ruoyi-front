@@ -94,3 +94,17 @@
 .el-dropdown .el-dropdown-link{
   color: var(--el-color-primary) !important;
 }
+.el-table{
+  .el-table__inner-wrapper{
+    border: 1px solid #ebeefa;
+  }
+  tr{
+    border: 1px solid #ebeefa;
+  }
+  .el-table__cell{
+    border: 1px solid #ebeefa;
+  }
+}
+
+
+
