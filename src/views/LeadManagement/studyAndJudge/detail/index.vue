@@ -1,7 +1,7 @@
 <!--
  * @Author: Ruixia Lv
  * @Date: 2023-09-21 16:25:36
- * @LastEditTime: 2023-09-22 17:04:29
+ * @LastEditTime: 2024-06-14 09:37:32
  * @LastEditors: Ruixia Lv
  * @Description: description
 -->
@@ -111,7 +111,7 @@ const recordData = [
     reason: '危险驾驶罪',
     recordTime: '2022-05-05',
     reference: 'BJHDXSJX202200013',
-    document: 'www.baidu.com',
+    document: '',
   },
   {
     name: '张某某',
@@ -120,7 +120,7 @@ const recordData = [
     reason: '危险驾驶罪',
     recordTime: '2022-05-05',
     reference: 'BJHDXSJX202200013',
-    document: 'www.baidu.com',
+    document: '',
   },
   {
     name: '张某某',
@@ -129,7 +129,7 @@ const recordData = [
     reason: '危险驾驶罪',
     recordTime: '2022-05-05',
     reference: 'BJHDXSJX202200013',
-    document: 'www.baidu.com',
+    document: '',
   },
 ]
 const recordLoading = ref(false)

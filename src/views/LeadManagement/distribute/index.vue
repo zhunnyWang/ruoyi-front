@@ -13,9 +13,9 @@ div<!--
 
     <el-table v-loading="loading" :data="dataSource">
       <el-table-column type="index" width="60" label="序号" />
-      <el-table-column label="线索编号" align="center" prop="id" width="100" />
-      <el-table-column label="线索名称" align="center" prop="name" />
-      <el-table-column label="线索来源" align="center" prop="source" />
+      <el-table-column label="案源编号" align="center" prop="id" width="100" />
+      <el-table-column label="案源名称" align="center" prop="name" />
+      <el-table-column label="案源来源" align="center" prop="source" />
       <el-table-column label="产生时间" align="center" prop="creatorTime" />
       <el-table-column label="状态" align="center" prop="status" width="200">
         <template #default="scope">
