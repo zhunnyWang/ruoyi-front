@@ -1,16 +1,25 @@
 <!--
  * @Author: Xueying Wang
  * @Date: 2023-09-12 14:52:46
- * @LastEditors: Xueying Wang
+ * @LastEditors: Wang Lu
  * @Description: description
 -->
 <template>
   <el-tree ref="tree" :props="defaultProps">
     <template #default="scope">
       <div class="flex flex-items-center w-full">
-        <div v-if="!scope.node.isLeaf && !scope.node.expanded" class="i-mdi-folder-outline w-4 h-4 mr-2" />
-        <div v-if="!scope.node.isLeaf && scope.node.expanded" class="i-mdi-folder-open-outline w-4 h-4 mr-2" />
-        <div v-else-if="scope.node.isLeaf" class="i-mdi-file-document-outline w-4 h-4 mr-2" />
+        <div
+          v-if="!scope.node.isLeaf && !scope.node.expanded"
+          class="i-mdi-folder-outline w-4 h-4 mr-2 bg-blue-500"
+        />
+        <div
+          v-if="!scope.node.isLeaf && scope.node.expanded"
+          class="i-mdi-folder-open-outline w-4 h-4 mr-2 bg-blue-500"
+        />
+        <div
+          v-else-if="scope.node.isLeaf"
+          class="i-mdi-file-document-outline w-4 h-4 mr-2 bg-blue-500"
+        />
         <p class="tree-node">
           <span>{{ scope.node.label }}</span>
           <slot v-bind="scope" />
@@ -22,13 +31,13 @@
 
 <script setup>
 const defaultProps = {
-  children: 'children',
-  label: 'label',
-}
+  children: "children",
+  label: "label",
+};
 
-const tree = ref()
+const tree = ref();
 
-defineExpose({ tree })
+defineExpose({ tree });
 </script>
 
 <style lang="scss" scoped>

@@ -8,7 +8,7 @@
   }
 
   .sidebarHide {
-    margin-left: 0!important;
+    margin-left: 0 !important;
   }
 
   .sidebar-container {
@@ -24,8 +24,8 @@
     left: 0;
     z-index: 1001;
     overflow: hidden;
-    -webkit-box-shadow: 2px 0 6px rgba(0,21,41,.35);
-    box-shadow: 2px 0 6px rgba(0,21,41,.35);
+    -webkit-box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+    box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
 
     // reset element-ui css
     .horizontal-collapse-transition {
@@ -70,7 +70,8 @@
       width: 100% !important;
     }
 
-    .el-menu-item, .menu-title {
+    .el-menu-item,
+    .menu-title {
       overflow: hidden !important;
       text-overflow: ellipsis !important;
       white-space: nowrap !important;
@@ -83,12 +84,12 @@
     // menu hover
     .sub-menu-title-noDropdown,
     .el-sub-menu__title {
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.06) !important;
-      }
+      // &:hover {
+      //   background-color: rgba(0, 0, 0, 0.06) !important;
+      // }
     }
 
-    & .theme-dark .is-active > .el-sub-menu__title {
+    & .theme-dark .is-active>.el-sub-menu__title {
       color: $base-menu-color-active !important;
     }
 
@@ -96,18 +97,18 @@
     & .el-sub-menu .el-menu-item {
       min-width: $base-sidebar-width !important;
 
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.06) !important;
-      }
+      // &:hover {
+      //   background-color: rgba(0, 0, 0, 0.06) !important;
+      // }
     }
 
     & .theme-dark .nest-menu .el-sub-menu>.el-sub-menu__title,
     & .theme-dark .el-sub-menu .el-menu-item {
-      background-color: $base-sub-menu-background !important;
+      // background-color: $base-sub-menu-background !important;
 
-      &:hover {
-        background-color: $base-sub-menu-hover !important;
-      }
+      // &:hover {
+      //   background-color: $base-sub-menu-hover !important;
+      // }
     }
   }
 
@@ -156,6 +157,7 @@
             visibility: hidden;
             display: inline-block;
           }
+
           &>i {
             height: 0;
             width: 0;
@@ -211,10 +213,10 @@
 
   .nest-menu .el-sub-menu>.el-sub-menu__title,
   .el-menu-item {
-    &:hover {
-      // you can use $sub-menuHover
-      background-color: rgba(0, 0, 0, 0.06) !important;
-    }
+    // &:hover {
+    //   // you can use $sub-menuHover
+    //   background-color: rgba(0, 0, 0, 0.06) !important;
+    // }
   }
 
   // the scroll bar appears when the sub-menu is too long
